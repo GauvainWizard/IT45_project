@@ -1,0 +1,88 @@
+#ifndef INTERVENANT_H
+#define INTERVENANT_H
+
+#include "enum.h"
+#include <iostream>
+
+using namespace std;
+
+/**
+ * @class Intervenant
+ * @brief Classe représentant un intervenant
+ */
+class Intervenant
+{
+private:
+    /**
+     * @brief Competence de l'intervenant
+     */
+    Competence competence;
+
+    /**
+     * @brief Specialite de l'intervenant
+     */
+    Specialite specialite;
+
+    /**
+     * @brief Temps de travail (partiel ou plein) de l'intervenant
+     */
+    Temps temps;
+
+public:
+    /**
+     * @brief Constructeur par défaut
+     */
+    Intervenant();
+
+    /**
+     * @brief Destructeur
+     */
+    virtual ~Intervenant();
+
+    /**
+     * @brief Constructeur par copie
+     * @param orig - Intervenant à copier
+     */
+    Intervenant(const Intervenant &orig);
+
+    /**
+     * @brief Opérateur d'affectation
+     * @param orig - Intervenant à copier
+     * @return L'intervenant
+     */
+    Intervenant &operator=(const Intervenant &orig);
+
+    /**
+     * @brief Construit un intervenant à partir de ses caractéristiques (competence, specialite, temps)
+     * @param competence - Competence de l'intervenant
+     * @param specialite - Specialite de l'intervenant
+     * @param temps - Temps de l'intervenant
+     */
+    Intervenant(const Competence competence, const Specialite specialite, const Temps temps);
+
+    /**
+     * @brief Affiche l'intervenant
+     * @return None
+     */
+    void display() const;
+
+    /**
+     * @brief Recupère la competence de l'intervenant
+     * @return Competence de l'intervenant
+     */
+    const Competence getCompetence() const;
+
+    /**
+     * @brief Recupère la specialite de l'intervenant
+     * @return Specialite de l'intervenant
+     */
+    const Specialite getSpecialite() const;
+
+    /**
+     * @brief Recupère le temps de l'intervenant
+     * @return Temps de l'intervenant
+     */
+    const Temps getTemps() const;
+};
+
+#endif
