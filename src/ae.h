@@ -14,6 +14,7 @@
 #include "enum.h"
 #include "intervenant.h"
 #include "mission.h"
+#include "global.h"
 
 using namespace std;
 // La classe Ae d�finie les param�tres d'une ex�cution d'un algorithme
@@ -22,16 +23,13 @@ class Ae
 {
 public:
 	// ATTRIBUTS
-	int nbgenerations;				  // nombre de g�n�rations apr�s quoi la recherche est arr�t�e
-	int taille_pop;					  // nombre d'individus dans la population
-	double taux_croisement;			  // taux de croisement : valeur entre 0 et 1
-	double taux_mutation;			  // taux de mutation : valeur entre 0 et 1
-	int taille_chromosome;			  // nombre de g�nes dans le chromosome
-	population *pop;				  // liste des individus de la population
-	int **les_distances;			  // matrice des distances entre les villes
-	vector<Intervenant> intervenants; // liste des intervenants
-	vector<Mission> missions;		  // liste des missions
-	int *distances;					  // matrice des distances entre les missions
+	int nbgenerations;		// nombre de g�n�rations apr�s quoi la recherche est arr�t�e
+	int taille_pop;			// nombre d'individus dans la population
+	double taux_croisement; // taux de croisement : valeur entre 0 et 1
+	double taux_mutation;	// taux de mutation : valeur entre 0 et 1
+	int taille_chromosome;	// nombre de g�nes dans le chromosome
+	population *pop;		// liste des individus de la population
+	int **les_distances;	// matrice des distances entre les villes
 
 	// CONSTRUCTEURS
 	Ae(int nbg, int tp, double tcroisement, double tmutation, int tc, string nom_dossier);

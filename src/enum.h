@@ -1,8 +1,6 @@
 #ifndef ENUM_H
 #define ENUM_H
 
-#include <stdio.h>
-
 // Defining enum Jour
 enum Jour
 {

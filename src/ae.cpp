@@ -1,5 +1,9 @@
 #include "ae.h"
 
+vector<Intervenant> intervenants; // liste des intervenants
+vector<Mission> missions;		  // liste des missions
+double *distances;				  // matrice des distances entre les missions
+
 using namespace std;
 
 // initialisation des param�tres de l'AG et g�n�ration de la population initiale
@@ -167,16 +171,17 @@ void Ae::construction_distance(string nom_dossier)
 	string path = nom_dossier + "/Distances.csv";
 
 	// allocation de la matrice des distances
-	distances = new int[taille_chromosome * taille_chromosome];
+	distances = new double[taille_chromosome * taille_chromosome];
 
 	// lecture du CSV intervenants
 	vector<vector<string>> files = readCSV(path);
 
-	for (size_t i = 0; i < files.size(); i++)
+	// construction de la matrice des distances
+	for (int i = 0; i < taille_chromosome; i++)
 	{
-		for (size_t j = 0; j < files[i].size(); j++)
+		for (int j = 0; j < taille_chromosome; j++)
 		{
-			distances[i * taille_chromosome + j] = stoi(files[i][j]);
+			distances[i * taille_chromosome + j] = stod(files[i][j].c_str());
 		}
 	}
 }

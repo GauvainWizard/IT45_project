@@ -27,7 +27,7 @@ int main(int argc, char **argv)
 	int taille_population = 20;
 	float taux_croisement = 0.8;
 	float taux_mutation = 0.5;
-	int taille_chromosome = 10;
+	int taille_chromosome = 100;
 	string folderInstance = "instances/100-10";
 
 	if (argc == 7)
