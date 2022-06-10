@@ -3,41 +3,40 @@
 using namespace std;
 
 // initialisation des param�tres d'un chromosome
-chromosome::chromosome(int tc)
+chromosome::chromosome(size_t tc)
 {
 	int a;
-	bool recommence = true;
 	taille = tc;
 	// un chromosome est compos� de 'taille' g�nes,
 	// les g�nes sont carat�ris� par un entier compris entre 0 et 'taille-1'
 	// il ne peux avoir 2 fois le m�me g�ne dans un chromosome
-	genes = new int[taille];
 	//  Arbitrairement, on choisit de toujours commencer un chromosome par le g�ne 0
-	genes[0] = 0;
-	for (int i = 1; i < taille; i++)
+	vector<int> index;
+	index.reserve(intervenants.getListe()->size());
+	cout << endl;
+	cout << "Chromosome : ";
+	gene.reserve(taille);
+	for (size_t i = 0; i < taille; i++)
 	{
-		recommence = true;
-		while (recommence)
-		{
-			recommence = false;
-			// on tire al�atoirement le g�ne suivante
-			a = Random::aleatoire(taille);
-			// le g�ne ne doit pas �tre d�j� dans le chromosome
-			// si tel est le cas on re-tire al�atoirement le g�ne
-			for (int j = 0; j < i; j++)
-				if (a == genes[j])
-					recommence = true;
-		}
-		genes[i] = a;
+		// affiche la compétence de la mission
+		// cout << "Compétence de la mission " << i << " : " << missions[i].getCompetence() << endl;
+		// on recupère la liste des index des intervenants qui ont la même compétence que la mission et qui sont disponibles
+		index = intervenants.getIndex(missions[i], gene);
+		// on tire aléatoirement un index dans cette liste
+		a = Random::aleatoire(index.size());
+		// on ajoute l'index dans le chromosome
+		gene[i] = a;
 	}
+
+	// on affiche le chromosome
+	afficher();
 	// on impose arbitrairement que gene[1] > gene[taille-1]
-	ordonner();
+	// ordonner();
 }
 
 // destruction de l'objet 'chromosome'
 chromosome::~chromosome()
 {
-	delete genes;
 }
 
 // on impose arbitrairement que la 2i�me ville visit�e (gene[1])
@@ -134,10 +133,11 @@ void chromosome::inversion_sequence_genes()
 // affichage des param�tre d'un chromosome
 void chromosome::afficher()
 {
-	cout << genes[0];
-	for (int i = 1; i < taille; i++)
-		cout << "-" << genes[i];
-	cout << " => fitness = " << fitness << endl;
+	cout << gene[0];
+	for (size_t i = 1; i < taille; i++)
+		cout << "-" << gene[i];
+	cout << endl;
+	// cout << " => fitness = " << fitness << endl;
 }
 
 bool chromosome::identique(chromosome *chro)

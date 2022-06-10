@@ -8,7 +8,7 @@ CPPFLAGS := \
 	-L/lib \
 	-L/usr/lib \
 	-L/usr/local/lib
-CXXFLAGS := -c -g -Wall -pedantic -std=c++11 -Ofast 
+CXXFLAGS := -c -g -Wall -pedantic -std=c++11 
 
 main: $(OBJ_FILES)
 	$(CXX) $(LDFLAGS) $(CPPFLAGS) -o $@ $^

@@ -18,8 +18,8 @@ public:
                             //   du meilleur au plus mauvais en fonction de la fitness	population(int tp, int tc);    // constructeur de l'objet
 
     // CONSTRUCTEURS
-    population(int tp, int tc); // constructeur de l'objet
-    ~population();              // destructeur de l'objet
+    population(size_t tp, size_t tc); // constructeur de l'objet
+    ~population();                    // destructeur de l'objet
 
     // METHODES
     void statiatiques(); // affiche quelques statistiques sur la population

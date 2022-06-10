@@ -3,7 +3,7 @@
 using namespace std;
 
 // initialisation d'une population de solutions
-population::population(int tp, int tc)
+population::population(size_t tp, size_t tc)
 {
 	taille_pop = tp;
 	individus = new chromosome *[taille_pop];

@@ -2,7 +2,9 @@
 #define INTERVENANT_H
 
 #include "enum.h"
+#include "mission.h"
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -27,6 +29,11 @@ private:
      * @brief Temps de travail (partiel ou plein) de l'intervenant
      */
     Temps temps;
+
+    /**
+     * @brief Id de l'intervenant
+     */
+    int id;
 
 public:
     /**
@@ -57,8 +64,9 @@ public:
      * @param competence - Competence de l'intervenant
      * @param specialite - Specialite de l'intervenant
      * @param temps - Temps de l'intervenant
+     * @param id - Id de l'intervenant
      */
-    Intervenant(const Competence competence, const Specialite specialite, const Temps temps);
+    Intervenant(const Competence competence, const Specialite specialite, const Temps temps, const int id);
 
     /**
      * @brief Affiche l'intervenant
@@ -83,6 +91,20 @@ public:
      * @return Temps de l'intervenant
      */
     const Temps getTemps() const;
+
+    /**
+     * @brief Recupère l'id de l'intervenant
+     * @return Id de l'intervenant
+     */
+    const int getId() const;
+
+    /**
+     * @brief Vérifie si l'intervenant est disponible pour la mission donnée
+     * @param mission - Mission donnée pour laquelle on vérifie si l'intervenant est disponible
+     * @param gene - Le gene qui correspond
+     * @return True si l'intervenant est disponible, false sinon
+     */
+    bool estDisponible(const Mission mission, const vector<int> gene) const;
 };
 
 #endif

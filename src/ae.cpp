@@ -1,13 +1,13 @@
 #include "ae.h"
 
-vector<Intervenant> intervenants; // liste des intervenants
-vector<Mission> missions;		  // liste des missions
-double *distances;				  // matrice des distances entre les missions
+Intervenants intervenants; // liste des intervenants
+vector<Mission> missions;  // liste des missions
+double *distances;		   // matrice des distances entre les missions
 
 using namespace std;
 
 // initialisation des param�tres de l'AG et g�n�ration de la population initiale
-Ae::Ae(int nbg, int tp, double tcroisement, double tmutation, int tc, string nom_dossier)
+Ae::Ae(int nbg, size_t tp, double tcroisement, double tmutation, size_t tc, string nom_dossier)
 {
 	nbgenerations = nbg;
 	taille_pop = tp;
@@ -37,7 +37,7 @@ chromosome *Ae::optimiser()
 	int best_fitness;
 
 	// �valuation des individus de la population initiale
-	for (int ind = 0; ind < taille_pop; ind++)
+	for (size_t ind = 0; ind < taille_pop; ind++)
 		pop->individus[ind]->evaluer(les_distances);
 
 	// on ordonne les indivudus selon leur fitness
@@ -171,17 +171,17 @@ void Ae::construction_distance(string nom_dossier)
 	string path = nom_dossier + "/Distances.csv";
 
 	// allocation de la matrice des distances
-	distances = new double[taille_chromosome * taille_chromosome];
+	distances = new double[(taille_chromosome + 1) * (taille_chromosome + 1)];
 
 	// lecture du CSV intervenants
 	vector<vector<string>> files = readCSV(path);
 
 	// construction de la matrice des distances
-	for (int i = 0; i < taille_chromosome; i++)
+	for (size_t i = 0; i < taille_chromosome + 1; i++)
 	{
-		for (int j = 0; j < taille_chromosome; j++)
+		for (size_t j = 0; j < taille_chromosome + 1; j++)
 		{
-			distances[i * taille_chromosome + j] = stod(files[i][j].c_str());
+			distances[i * (taille_chromosome + 1) + j] = stod(files[i][j].c_str());
 		}
 	}
 }
@@ -250,10 +250,10 @@ void Ae::construction_intervenants(string nom_dossier)
 				tempsIntervenant = static_cast<Temps>(j);
 
 		// crée un intervenant
-		Intervenant intervenant(competenceIntervenant, specialiteIntervenant, tempsIntervenant);
+		Intervenant intervenant(competenceIntervenant, specialiteIntervenant, tempsIntervenant, i);
 
 		// ajoute l'intervenant à la liste à la fin
-		intervenants.push_back(intervenant);
+		intervenants.getListe()->push_back(intervenant);
 	}
 }
 
@@ -331,7 +331,7 @@ void Ae::construction_missions(string nom_dossier)
 				specialiteMission = static_cast<Specialite>(j);
 
 		// Créer une mission
-		Mission mission(competenceMission, specialiteMission, jourMission, horairesMission);
+		Mission mission(competenceMission, specialiteMission, jourMission, horairesMission, i);
 
 		// ajoute la mission à la liste à la fin
 		missions.push_back(mission);

@@ -12,13 +12,14 @@ class chromosome
 {
 public:
     // ATTRIBUTS
-    int *genes;  // les g�nes du chromosome/solution
-    int taille;  // la taille du chromosome = nombre de g�nes
-    int fitness; // la valeur de la fonction objectif (fitness) de la solution
+    int *genes;       // liste des genes
+    vector<int> gene; // les g�nes du chromosome/solution
+    size_t taille;    // la taille du chromosome = nombre de g�nes
+    int fitness;      // la valeur de la fonction objectif (fitness) de la solution
 
     // CONSTRUCTEURS
-    chromosome(int tc); // constructeur de l'objet al�atoirement
-    ~chromosome();      // destructeur de l'objet
+    chromosome(size_t tc); // constructeur de l'objet al�atoirement
+    ~chromosome();         // destructeur de l'objet
 
     // METHODES
     void afficher(); // fonction d'affichage du chromosome (i.e. de la solution)

@@ -38,6 +38,11 @@ private:
     Jour jour;
 
     /**
+     * @brief Id de la mission
+     */
+    int id;
+
+    /**
      * @brief Horaires de la mission
      * Tableau de 2 entiers des horaires du cours : 1er elem = minute de la journée du début de la mission, 2e elem = minute de fin de la mission
      */
@@ -67,7 +72,7 @@ public:
      *  @param j - Jour de la mission
      *  @param horaires - Minutes de début et de fin de la mission
      */
-    Mission(const Competence c, const Specialite s, Jour j, const int *horaires);
+    Mission(const Competence c, const Specialite s, const Jour j, const int *horaires, const int id);
 
     /**
      *  @brief Opérateur d'affectation
@@ -93,6 +98,12 @@ public:
      *  @return Jour de la mission
      */
     const Jour getJour() const;
+
+    /**
+     * @brief Retourne l'id de la mission
+     * @return Id de la mission
+     */
+    const int getId() const;
 
     /**
      *  @brief Retourne les horaires de la mission
