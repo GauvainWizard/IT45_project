@@ -12,7 +12,8 @@ double kappaC;			   // paramètre de la fonction des fonctions d'objectif (100 /
 using namespace std;
 
 // initialisation des param�tres de l'AG et g�n�ration de la population initiale
-Ae::Ae(int nbg, size_t tp, double tcroisement, double tmutation, size_t tc, string nom_dossier)
+
+Ae::Ae(size_t nbg, size_t tp, double tcroisement, double tmutation, size_t tc, string nom_dossier)
 {
 	nbgenerations = nbg;
 	taille_pop = tp;
@@ -43,7 +44,7 @@ chromosome *Ae::optimiser()
 	double best_fitness;
 
 	// �valuation des individus de la population initiale
-	for (size_t ind = 0; ind < taille_pop; ind++)
+	for (size_t ind = 0; ind < taille_pop; ++ind)
 		pop->individus[ind]->evaluer();
 
 	// on ordonne les indivudus selon leur fitness
@@ -55,7 +56,7 @@ chromosome *Ae::optimiser()
 	pop->statistiques();
 
 	// tant que le nombre de g�n�rations limite n'est pas atteint
-	for (int g = 0; g < nbgenerations; g++)
+	for (size_t g = 0; g < nbgenerations; ++g)
 	{
 		// s�lection de deux individus de la population courante
 		pere1 = pop->selection_roulette();
@@ -122,7 +123,7 @@ void Ae::croisement1X(chromosome *parent1, chromosome *parent2,
 	vector<int> odre_parent1(nb_genes);
 	vector<int> odre_parent2(nb_genes);
 
-	for (int i = 0; i < nb_genes; i++)
+	for (size_t i = 0; i < nb_genes; ++i)
 	{
 		odre_parent1[parent1->gene[i]] = i;
 		odre_parent2[parent2->gene[i]] = i;
@@ -138,9 +139,9 @@ void Ae::croisement1X(chromosome *parent1, chromosome *parent2,
 
 	// 3) l'op�rateur 1X compl�te l'enfant 1 avec les g�nes manquant en les pla�ant dans l'ordre du parent 2
 	//                         et l'enfant 2 avec les g�nes manquant en les pla�ant dans l'ordre du parent 1.
-	for (int k = point + 1; k < nb_genes; k++)
+	for (size_t k = point + 1; k < nb_genes; ++k)
 	{
-		for (int l = k + 1; l < nb_genes; l++)
+		for (size_t l = k + 1; l < nb_genes; ++l)
 		{
 			if (odre_parent2[enfant1->gene[k]] > odre_parent2[enfant1->gene[l]])
 				enfant1->echange_2_genes(k, l);
@@ -177,7 +178,7 @@ void Ae::construction_correlation(string nom_dossier)
 	gammaC = 100 / 10;
 	// zeta
 	// On boucle sur la liste des intervenants
-	for (size_t i = 0; i < intervenants.getListe()->size(); i++)
+	for (size_t i = 0; i < intervenants.getListe()->size(); ++i)
 	{
 		// On convertir le temps de travail de l'intervenant i en heures
 		zetaC += parseTemps[intervenants.getListe()->at(i).getTemps()];
@@ -185,7 +186,7 @@ void Ae::construction_correlation(string nom_dossier)
 	zetaC = (100) / (zetaC / intervenants.getListe()->size());
 	// kappa
 	// on boucle sur la liste des missions
-	for (size_t i = 1; i < missions.size() + 1; i++)
+	for (size_t i = 1; i < missions.size() + 1; ++i)
 	{
 		kappaC += distances[0 * (missions.size() + 1) + i] + distances[i * (missions.size() + 1) + 0];
 	}
@@ -204,9 +205,9 @@ void Ae::construction_distance(string nom_dossier)
 	vector<vector<string>> files = readCSV(path);
 
 	// construction de la matrice des distances
-	for (size_t i = 0; i < taille_chromosome + 1; i++)
+	for (size_t i = 0; i < taille_chromosome + 1; ++i)
 	{
-		for (size_t j = 0; j < taille_chromosome + 1; j++)
+		for (size_t j = 0; j < taille_chromosome + 1; ++j)
 		{
 			distances[i * (taille_chromosome + 1) + j] = stod(files[i][j].c_str());
 		}
@@ -242,7 +243,7 @@ void Ae::construction_intervenants(string nom_dossier)
 
 	// on parcourt les Intervenants du fichier CSV
 
-	for (size_t i = 0; i < files.size(); i++)
+	for (size_t i = 0; i < files.size(); ++i)
 	{
 		// On récupère la compétence de l'intervenant
 		string competence = files[i][1];
@@ -251,7 +252,7 @@ void Ae::construction_intervenants(string nom_dossier)
 		Competence competenceIntervenant;
 
 		// On parcourt les compétences possible et on affecte la compétence correspondante
-		for (size_t j = 0; j < 2; j++)
+		for (size_t j = 0; j < 2; ++j)
 			if (competence == competences[j])
 				competenceIntervenant = static_cast<Competence>(j);
 
@@ -262,7 +263,7 @@ void Ae::construction_intervenants(string nom_dossier)
 		Specialite specialiteIntervenant;
 
 		// On parcourt les spécialités possible et on affecte la spécialité correspondante
-		for (size_t j = 0; j < 6; j++)
+		for (size_t j = 0; j < 6; ++j)
 			if (specialite == specialites[j])
 				specialiteIntervenant = static_cast<Specialite>(j);
 
@@ -273,7 +274,7 @@ void Ae::construction_intervenants(string nom_dossier)
 		Temps tempsIntervenant;
 
 		// On parcourt les compétences possible et on affecte la compétence correspondante
-		for (size_t j = 0; j < 2; j++)
+		for (size_t j = 0; j < 2; ++j)
 			if (tempsTravail == temps[j])
 				tempsIntervenant = static_cast<Temps>(j);
 
@@ -314,7 +315,7 @@ void Ae::construction_missions(string nom_dossier)
 
 	// on parcourt les missions du fichier CSV
 
-	for (size_t i = 0; i < files.size(); i++)
+	for (size_t i = 0; i < files.size(); ++i)
 	{
 		// On récupère le jour de la mission
 		string jour = files[i][1];
@@ -326,14 +327,14 @@ void Ae::construction_missions(string nom_dossier)
 
 		string horaires[2];
 
-		for (size_t j = 0; j < 2; j++)
+		for (size_t j = 0; j < 2; ++j)
 			horaires[j] = files[i][j + 2];
 
 		// On initialise les horaires de travail de la mission
 		int horairesMission[2];
 
 		// On convertit les horaires de travail de la mission en int
-		for (size_t j = 0; j < 2; j++)
+		for (size_t j = 0; j < 2; ++j)
 			horairesMission[j] = stoi(horaires[j]);
 
 		// On récupère la compétence de la mission
@@ -343,7 +344,7 @@ void Ae::construction_missions(string nom_dossier)
 		Competence competenceMission;
 
 		// On parcourt les compétences possible et on affecte la compétence correspondante
-		for (size_t j = 0; j < 2; j++)
+		for (size_t j = 0; j < 2; ++j)
 			if (competence == competences[j])
 				competenceMission = static_cast<Competence>(j);
 
@@ -354,7 +355,7 @@ void Ae::construction_missions(string nom_dossier)
 		Specialite specialiteMission;
 
 		// On parcourt les spécialités possible et on affecte la spécialité correspondante
-		for (size_t j = 0; j < 6; j++)
+		for (size_t j = 0; j < 6; ++j)
 			if (specialite == specialites[j])
 				specialiteMission = static_cast<Specialite>(j);
 

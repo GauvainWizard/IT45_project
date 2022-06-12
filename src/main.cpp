@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <iostream>
+#include <iomanip> // pour setprecision
+#include <chrono>
 #include "ae.h"
 #include "chromosome.h"
 #include "random.h"
@@ -23,8 +25,8 @@ int main(int argc, char **argv)
 	Random::randomize();
 
 	// valeurs par defaut
-	int nb_generation = 500000;
-	size_t taille_population = 20;
+	size_t nb_generation = 150000;
+	size_t taille_population = 25;
 	float taux_croisement = 0.8;
 	float taux_mutation = 0.3;
 	size_t taille_chromosome = 100;
@@ -40,9 +42,7 @@ int main(int argc, char **argv)
 		folderInstance = argv[6];
 	}
 	else if (argc == 1)
-	{
 		cout << "Parametres par default" << endl;
-	}
 	else
 	{
 		cout << "Nombre d'arguments n'est pas correct." << endl;
@@ -57,7 +57,7 @@ int main(int argc, char **argv)
 	}
 
 	// on parcourt les missions du fichier CSV
-
+	auto start = std::chrono::high_resolution_clock::now();
 	// initialise l'algorithme �volutionniste
 	Ae algo(nb_generation, taille_population, taux_croisement, taux_mutation, taille_chromosome, folderInstance);
 	// arguments du constructeur de l'objet Ae
@@ -70,8 +70,11 @@ int main(int argc, char **argv)
 
 	// lance l'algorithme �volutionniste
 	chromosome *best = algo.optimiser();
-
+	auto end = chrono::high_resolution_clock::now();
+	chrono::duration<double> diff = end - start;
+	cout << "Temps d'execution : " << std::setprecision(9) << diff.count() << "s" << endl;
 	// affiche la fitness du meilleur individu trouv�
 	cout << "La meilleure solution trouvee est : ";
+
 	// best->afficher();
 }

@@ -77,7 +77,7 @@ bool Intervenant::estDisponible(const Mission mission, const vector<int> gene) c
     if (competence == mission.getCompetence())
     {
         // on fait la liste des missions de l'intervenant le jour de la mission
-        for (size_t i = 0; i < gene.size(); i++)
+        for (size_t i = 0; i < gene.size(); ++i)
         {
             // on vérifie si la mission que l'on regarde est du même jour que la mission donnée et que c'est l'intervenant concerné
             if (missions[i].getJour() == mission.getJour() && gene[i] == id)
@@ -114,7 +114,7 @@ vector<Mission> Intervenant::getMissionsJour(const Jour jour, const vector<int> 
     // On reserve la mémoire pour la liste
     missionsRetour.reserve(gene.size());
     // on fait la liste des missions de l'intervenant le jour de la mission
-    for (size_t i = 0; i < gene.size(); i++)
+    for (size_t i = 0; i < gene.size(); ++i)
     {
         // on vérifie si la mission que l'on regarde est du même jour que la mission donnée et que c'est l'intervenant concerné
         if (missions[i].getJour() == jour && gene[i] == id)
@@ -134,7 +134,7 @@ vector<Mission> Intervenant::getMissions(const vector<int> gene) const
     vector<Mission> missionsRetour;
     // On reserve la mémoire pour la liste
     missionsRetour.reserve(missions.size());
-    for (size_t i = 0; i < 7; i++)
+    for (size_t i = 0; i < 7; ++i)
     {
         // On crée la liste de missions
         vector<Mission> missionsTemp;

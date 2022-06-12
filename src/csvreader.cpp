@@ -1,11 +1,4 @@
 #include "csvreader.h"
-
-/**
- * @brief lire le fichier CSV
- *
- * @param path chemin du fichier
- * @return vector<vector<string>> contenant les données du fichier
- */
 vector<vector<string>> readCSV(string path)
 {
     vector<vector<string>> table;

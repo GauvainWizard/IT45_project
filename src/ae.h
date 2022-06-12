@@ -23,16 +23,15 @@ class Ae
 {
 public:
 	// ATTRIBUTS
-	int nbgenerations;		  // nombre de g�n�rations apr�s quoi la recherche est arr�t�e
+	size_t nbgenerations;	  // nombre de g�n�rations apr�s quoi la recherche est arr�t�e
 	size_t taille_pop;		  // nombre d'individus dans la population
 	double taux_croisement;	  // taux de croisement : valeur entre 0 et 1
 	double taux_mutation;	  // taux de mutation : valeur entre 0 et 1
 	size_t taille_chromosome; // nombre de g�nes dans le chromosome
 	population *pop;		  // liste des individus de la population
-	int **les_distances;	  // matrice des distances entre les villes
 
 	// CONSTRUCTEURS
-	Ae(int nbg, size_t tp, double tcroisement, double tmutation, size_t tc, string nom_dossier);
+	Ae(size_t nbg, size_t tp, double tcroisement, double tmutation, size_t tc, string nom_dossier);
 	// constructeur de l'objet Algaorithme evolutioniste
 	~Ae(); // destructeur de l'objet Ae
 

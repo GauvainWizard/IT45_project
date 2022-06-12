@@ -23,7 +23,7 @@ public:
 
     // METHODES
     void statistiques(); // affiche quelques statistiques sur la population
-    int nb_chromosomes_similaires(chromosome *chro);
+    size_t nb_chromosomes_similaires(chromosome *chro);
     // compte le nombre de chromosomes similaires � 'chro'
     void similitude(); // affiche les r�sultats du comptage de chromosomes similaires
                        // aux meilleurs individus de la population.
@@ -31,12 +31,6 @@ public:
     // OPERATEURS DE SELECTION ET DE REMPLACEMENT
     chromosome *selection_roulette();                 // sel�ction par roulette biais�e d'un individu de la population
     void remplacement_roulette(chromosome *individu); // rempacement par roulette biais�e d'un individu de la population par un chromosome donn�
-
-    chromosome *selection_ranking(float taux_ranking);                   // sel�ction par ranking d'un individu de la population
-    void remplacement_ranking(chromosome *individu, float taux_ranking); // rempacement par ranking d'un individu de la population par un chromosome donn�
-
-    chromosome *selection_aleatoire();                 // s�lection et de remplacement al�toire
-    void remplacement_aleatoire(chromosome *individu); // remplacement al�toire
 
     void ordonner();
     void reordonner();

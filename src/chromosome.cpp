@@ -14,7 +14,7 @@ chromosome::chromosome(size_t tc)
 	// On réserve la mémoire pour le gene
 	gene.reserve(taille);
 	// On boucle sur la taille du chromosome
-	for (size_t i = 0; i < taille; i++)
+	for (size_t i = 0; i < taille; ++i)
 	{
 		// on recupère la liste des index des intervenants qui ont la même compétence que la mission et qui sont disponibles
 		index = intervenants.getIndex(missions[i], gene);
@@ -61,11 +61,11 @@ bool chromosome::evaluer()
 
 	// On va calculer femployee
 	// On boucle sur la liste des intervenants
-	for (size_t i = 0; i < intervenants.getListe()->size(); i++)
+	for (size_t i = 0; i < intervenants.getListe()->size(); ++i)
 	{
 		heuresTravaillees[i] = distancesTravail[i] = heuresNonTravaillees[i] = heuresSup[i] = 0;
 		// On boucle sur les jours
-		for (size_t j = 0; j < 7; j++)
+		for (size_t j = 0; j < 7; ++j)
 		{
 			// on récupère la liste des missions de l'intervenant le jour de la mission
 			missionsJour = intervenants.getListe()->at(i).getMissionsJour(static_cast<Jour>(j), gene);
@@ -82,7 +82,7 @@ bool chromosome::evaluer()
 				heuresTravaillees[i] += distances[(missionsJour[missionsJour.size() - 1].getId() + 1) * (missions.size() + 1) + 0] / (50 * 1000 / 60);
 			}
 			// On boucle sur les missions du jour
-			for (size_t k = 0; k < missionsJour.size(); k++)
+			for (size_t k = 0; k < missionsJour.size(); ++k)
 			{
 				if (k + 1 < missionsJour.size())
 				{
@@ -127,7 +127,7 @@ bool chromosome::evaluer()
 	moyenneOH /= intervenants.getListe()->size();
 	moyenneWH /= intervenants.getListe()->size();
 	moyenneD /= intervenants.getListe()->size();
-	for (size_t i = 0; i < intervenants.getListe()->size(); i++)
+	for (size_t i = 0; i < intervenants.getListe()->size(); ++i)
 	{
 		sOH += (heuresSup[i] - moyenneOH) * (heuresSup[i] - moyenneOH);
 		sWH += (heuresNonTravaillees[i] - moyenneWH) * (heuresNonTravaillees[i] - moyenneWH);
@@ -142,7 +142,7 @@ bool chromosome::evaluer()
 // copie les genes d'un chromosome. la fitness n'est reprise
 void chromosome::copier(chromosome *source)
 {
-	for (size_t i = 0; i < gene.size(); i++)
+	for (size_t i = 0; i < gene.size(); ++i)
 		gene[i] = source->gene[i];
 }
 
@@ -180,7 +180,7 @@ void chromosome::inversion_sequence_genes()
 void chromosome::afficher()
 {
 	cout << gene[0];
-	for (size_t i = 1; i < taille; i++)
+	for (size_t i = 1; i < taille; ++i)
 		cout << "-" << gene[i];
 	cout << endl;
 	// cout << " => fitness = " << fitness << endl;
@@ -195,14 +195,14 @@ void chromosome::afficher()
 	vector<Mission> missionsRetour;
 	// On reserve la mémoire pour la liste
 	missionsRetour.reserve(gene.size());
-	for (size_t i = 0; i < 7; i++)
+	for (size_t i = 0; i < 7; ++i)
 	{
 		// affiche le jour
 		cout << jours[i] << " : " << endl;
 		// on recupère la liste des index des intervenants qui travaillent le jour i
 		index = intervenants.getIndexJour(static_cast<Jour>(i), gene);
 		// on affiche la liste des intervenants qui travaillent le jour i
-		for (size_t j = 0; j < index.size(); j++)
+		for (size_t j = 0; j < index.size(); ++j)
 		{
 			// on récupère les horaires de travail de l'intervenant
 			missionsRetour = intervenants.getListe()->at(index[j]).getMissionsJour(static_cast<Jour>(i), gene);
@@ -218,7 +218,7 @@ void chromosome::afficher()
 
 bool chromosome::identique(chromosome *chro)
 {
-	for (size_t i = 1; i < gene.size(); i++)
+	for (size_t i = 1; i < gene.size(); ++i)
 		if (chro->gene[i] != this->gene[i])
 			return false;
 	return true;
