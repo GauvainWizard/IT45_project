@@ -105,6 +105,29 @@ public:
      * @return True si l'intervenant est disponible, false sinon
      */
     bool estDisponible(const Mission mission, const vector<int> gene) const;
+
+    /**
+     * @brief Vérifie si l'intervenant travaille le jour donné
+     * @param jour - Jour donné pour lequel on vérifie si l'intervenant travaille
+     * @param gene - Le gene qui correspond
+     * @return True si l'intervenant travaille le jour donné, false sinon
+     */
+    bool travailleLeJour(const Jour jour, const vector<int> gene) const;
+
+    /**
+     * @brief Récupère la liste des missions de l'intervenant pour le jour donné
+     * @param jour - Jour pour lequel on récupère les missions
+     * @param gene - Le gene qui correspond
+     * @return Liste des missions de l'intervenant pour le jour donné
+     */
+    vector<Mission> getMissionsJour(const Jour jour, const vector<int> gene) const;
+
+    /**
+     * @brief Récupère la liste des missions de l'intervenant
+     * @param gene - Le gene qui correspond
+     * @return Liste des missions de l'intervenant
+     */
+    vector<Mission> getMissions(const vector<int> gene) const;
 };
 
 #endif

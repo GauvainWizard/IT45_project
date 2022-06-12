@@ -13,7 +13,7 @@ class population
 public:
     // ATTRIBUTS
     chromosome **individus; // liste des individus de la population
-    int taille_pop;         // nombre d'individus de la population
+    size_t taille_pop;      // nombre d'individus de la population
     int *ordre;             // tableau donnat l'ordre des individus dans la population
                             //   du meilleur au plus mauvais en fonction de la fitness	population(int tp, int tc);    // constructeur de l'objet
 
@@ -22,7 +22,7 @@ public:
     ~population();                    // destructeur de l'objet
 
     // METHODES
-    void statiatiques(); // affiche quelques statistiques sur la population
+    void statistiques(); // affiche quelques statistiques sur la population
     int nb_chromosomes_similaires(chromosome *chro);
     // compte le nombre de chromosomes similaires � 'chro'
     void similitude(); // affiche les r�sultats du comptage de chromosomes similaires

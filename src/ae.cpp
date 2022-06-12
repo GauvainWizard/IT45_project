@@ -3,6 +3,11 @@
 Intervenants intervenants; // liste des intervenants
 vector<Mission> missions;  // liste des missions
 double *distances;		   // matrice des distances entre les missions
+double alphaC;			   // paramètre de la fonction des fonctions d'objectif (100 / nombre total de missions)
+double betaC;			   // paramètre de la fonction des fonctions d'objectif (100 / nombre total d'heures qu'un intervenant peut travailler par semaine)
+double gammaC;			   // paramètre de la fonction des fonctions d'objectif (100 / nombre total d'heures supplémentaires tolérées)
+double zetaC;			   // paramètre de la fonction des fonctions d'objectif (100 / moyenne des heures du quota du travail des employés)
+double kappaC;			   // paramètre de la fonction des fonctions d'objectif (100 / moyenne de toutes les distances)
 
 using namespace std;
 
@@ -17,6 +22,7 @@ Ae::Ae(int nbg, size_t tp, double tcroisement, double tmutation, size_t tc, stri
 	construction_intervenants(nom_dossier);
 	construction_missions(nom_dossier);
 	construction_distance(nom_dossier);
+	construction_correlation(nom_dossier);
 	pop = new population(taille_pop, taille_chromosome);
 }
 
@@ -34,11 +40,11 @@ chromosome *Ae::optimiser()
 	chromosome *fils2 = new chromosome(taille_chromosome);
 	chromosome *pere1;
 	chromosome *pere2;
-	int best_fitness;
+	double best_fitness;
 
 	// �valuation des individus de la population initiale
 	for (size_t ind = 0; ind < taille_pop; ind++)
-		pop->individus[ind]->evaluer(les_distances);
+		pop->individus[ind]->evaluer();
 
 	// on ordonne les indivudus selon leur fitness
 	pop->ordonner();
@@ -46,7 +52,7 @@ chromosome *Ae::optimiser()
 	best_fitness = pop->individus[pop->ordre[0]]->fitness;
 	//  on affiche les statistiques de la population initiale
 	cout << "Quelques statistiques sur la population initiale" << endl;
-	pop->statiatiques();
+	pop->statistiques();
 
 	// tant que le nombre de g�n�rations limite n'est pas atteint
 	for (int g = 0; g < nbgenerations; g++)
@@ -54,7 +60,6 @@ chromosome *Ae::optimiser()
 		// s�lection de deux individus de la population courante
 		pere1 = pop->selection_roulette();
 		pere2 = pop->selection_roulette();
-
 		// On effectue un croisementavec une probabilit� "taux_croisement"
 		if (Random::aleatoire(1000) / 1000.0 < taux_croisement)
 		{
@@ -75,12 +80,10 @@ chromosome *Ae::optimiser()
 			fils2->echange_2_genes_consecutifs();
 
 		// �valuation des deux nouveaux individus g�n�r�s
-		fils1->evaluer(les_distances);
-		fils2->evaluer(les_distances);
-
-		// Insertion des nouveaux individus dans la population
-		pop->remplacement_roulette(fils1);
-		pop->remplacement_roulette(fils2);
+		if (fils1->evaluer())
+			pop->remplacement_roulette(fils1);
+		if (fils2->evaluer())
+			pop->remplacement_roulette(fils2);
 
 		// On r�ordonne la population selon la fitness
 		pop->reordonner();
@@ -95,7 +98,7 @@ chromosome *Ae::optimiser()
 	}
 	//  on affiche les statistiques de la population finale
 	cout << "Quelques statistiques sur la population finale" << endl;
-	pop->statiatiques();
+	pop->statistiques();
 	//  on affiche la consanginit� de la population finale
 	pop->similitude();
 
@@ -114,15 +117,15 @@ chromosome *Ae::optimiser()
 void Ae::croisement1X(chromosome *parent1, chromosome *parent2,
 					  chromosome *enfant1, chromosome *enfant2)
 {
-	int nb_genes = parent1->taille;
 
-	int *odre_parent1 = new int[nb_genes];
-	int *odre_parent2 = new int[nb_genes];
+	size_t nb_genes = parent1->taille;
+	vector<int> odre_parent1(nb_genes);
+	vector<int> odre_parent2(nb_genes);
 
 	for (int i = 0; i < nb_genes; i++)
 	{
-		odre_parent1[parent1->genes[i]] = i;
-		odre_parent2[parent2->genes[i]] = i;
+		odre_parent1[parent1->gene[i]] = i;
+		odre_parent2[parent2->gene[i]] = i;
 	}
 
 	// 1) l'op�rateur 1X choisit de mani�re al�atoire le point de croisement
@@ -139,14 +142,12 @@ void Ae::croisement1X(chromosome *parent1, chromosome *parent2,
 	{
 		for (int l = k + 1; l < nb_genes; l++)
 		{
-			if (odre_parent2[enfant1->genes[k]] > odre_parent2[enfant1->genes[l]])
+			if (odre_parent2[enfant1->gene[k]] > odre_parent2[enfant1->gene[l]])
 				enfant1->echange_2_genes(k, l);
-			if (odre_parent1[enfant2->genes[k]] > odre_parent1[enfant2->genes[l]])
+			if (odre_parent1[enfant2->gene[k]] > odre_parent1[enfant2->gene[l]])
 				enfant2->echange_2_genes(k, l);
 		}
 	}
-	delete[] odre_parent1;
-	delete[] odre_parent2;
 }
 
 // op�rateur de croisement � deux points : croisement 2X
@@ -163,6 +164,32 @@ void Ae::croisement2X(chromosome *parent1, chromosome *parent2,
 void Ae::croisement2LOX(chromosome *parent1, chromosome *parent2,
 						chromosome *enfant_s1, chromosome *enfant_s2)
 {
+}
+
+void Ae::construction_correlation(string nom_dossier)
+{
+	double parseTemps[2] = {24, 35}; // tableau pour convertir en heures
+	// alpha
+	alphaC = 100 / missions.size();
+	// beta
+	betaC = 100 / 45;
+	// gamma
+	gammaC = 100 / 10;
+	// zeta
+	// On boucle sur la liste des intervenants
+	for (size_t i = 0; i < intervenants.getListe()->size(); i++)
+	{
+		// On convertir le temps de travail de l'intervenant i en heures
+		zetaC += parseTemps[intervenants.getListe()->at(i).getTemps()];
+	}
+	zetaC = (100) / (zetaC / intervenants.getListe()->size());
+	// kappa
+	// on boucle sur la liste des missions
+	for (size_t i = 1; i < missions.size() + 1; i++)
+	{
+		kappaC += distances[0 * (missions.size() + 1) + i] + distances[i * (missions.size() + 1) + 0];
+	}
+	kappaC = (100) / (kappaC / intervenants.getListe()->size());
 }
 
 void Ae::construction_distance(string nom_dossier)
@@ -185,6 +212,7 @@ void Ae::construction_distance(string nom_dossier)
 		}
 	}
 }
+
 void Ae::construction_intervenants(string nom_dossier)
 {
 	// Concatenation du nom du dossier et du nom du fichier

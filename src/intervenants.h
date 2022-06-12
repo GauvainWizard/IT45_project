@@ -57,6 +57,13 @@ public:
      * @return La liste des index des intervenants correspondants
      */
     vector<int> getIndex(const Mission mission, const vector<int> gene);
+
+    /**
+     * @brief Recupère la liste des index des intervenants qui travaillent le jour donnée
+     * @param jour - Jour donné pour lequel on recherche les intervenants
+     * @return La liste des index des intervenants correspondants
+     */
+    vector<int> getIndexJour(const Jour jour, const vector<int> gene);
 };
 
 #endif

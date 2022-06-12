@@ -4,6 +4,8 @@
 #include <math.h>
 #include <stdio.h>
 #include <iostream>
+#include <vector>
+#include <string>
 #include "random.h"
 #include "global.h"
 
@@ -12,10 +14,9 @@ class chromosome
 {
 public:
     // ATTRIBUTS
-    int *genes;       // liste des genes
     vector<int> gene; // les g�nes du chromosome/solution
     size_t taille;    // la taille du chromosome = nombre de g�nes
-    int fitness;      // la valeur de la fonction objectif (fitness) de la solution
+    double fitness;   // la valeur de la fonction objectif (fitness) de la solution
 
     // CONSTRUCTEURS
     chromosome(size_t tc); // constructeur de l'objet al�atoirement
@@ -23,11 +24,10 @@ public:
 
     // METHODES
     void afficher(); // fonction d'affichage du chromosome (i.e. de la solution)
-    void evaluer(int **distance);
+    bool evaluer();
     // fonction d'�valuation du chromosome (c-�-d calcul la fitness)
     //   Elle doit etre lanc�e � la creation des solution et apres
     //   l'ex�cution des operateurs de mutation et de croisement
-    void ordonner();                  // ordonne le sens de la tourn�e si gene[1] > gene[taille-1]
     void copier(chromosome *source);  // copie le chromosome 'source'
     bool identique(chromosome *chro); // test si 2 chromosome sont identique
 

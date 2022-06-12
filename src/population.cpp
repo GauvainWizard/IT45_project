@@ -7,27 +7,31 @@ population::population(size_t tp, size_t tc)
 {
 	taille_pop = tp;
 	individus = new chromosome *[taille_pop];
-	for (int i = 0; i < taille_pop; i++)
+	for (size_t i = 0; i < taille_pop; i++)
 		individus[i] = new chromosome(tc);
 	ordre = new int[taille_pop];
+
+	// affiche la population initiale
+	// cout << "Population initiale : " << endl;
+	// afficher();
 }
 
 // destruction de l'objet "population"
 population::~population()
 {
-	for (int i = 0; i < taille_pop; i++)
+	for (size_t i = 0; i < taille_pop; i++)
 		delete individus[i];
 	delete individus;
 	delete ordre;
 }
 
 // statistiques sur la population
-void population::statiatiques()
+void population::statistiques()
 {
 	double moyenne = 0;
 	double ecart_type = 0;
 
-	for (int i = 0; i < taille_pop; i++)
+	for (size_t i = 0; i < taille_pop; i++)
 	{
 		moyenne += individus[i]->fitness;
 		ecart_type += individus[i]->fitness * individus[i]->fitness;
@@ -65,7 +69,7 @@ void population::similitude()
 int population::nb_chromosomes_similaires(chromosome *chro)
 {
 	int nb = 0;
-	for (int i = 0; i < taille_pop; i++)
+	for (size_t i = 0; i < taille_pop; i++)
 		if (chro->identique(individus[i]))
 			nb++;
 	return nb;
@@ -75,11 +79,11 @@ int population::nb_chromosomes_similaires(chromosome *chro)
 void population::ordonner()
 {
 	int inter;
-	for (int i = 0; i < taille_pop; i++)
+	for (size_t i = 0; i < taille_pop; i++)
 		ordre[i] = i;
 
-	for (int i = 0; i < taille_pop - 1; i++)
-		for (int j = i + 1; j < taille_pop; j++)
+	for (size_t i = 0; i < taille_pop - 1; i++)
+		for (size_t j = i + 1; j < taille_pop; j++)
 			if (individus[ordre[i]]->fitness > individus[ordre[j]]->fitness)
 			{
 				inter = ordre[i];
@@ -93,8 +97,8 @@ void population::ordonner()
 void population::reordonner()
 {
 	int inter;
-	for (int i = 0; i < taille_pop - 1; i++)
-		for (int j = i + 1; j < taille_pop; j++)
+	for (size_t i = 0; i < taille_pop - 1; i++)
+		for (size_t j = i + 1; j < taille_pop; j++)
 			if (individus[ordre[i]]->fitness > individus[ordre[j]]->fitness)
 			{
 				inter = ordre[i];
@@ -111,7 +115,7 @@ chromosome *population::selection_roulette()
 	int fitness_max = individus[0]->fitness;
 	int somme_portion;
 
-	for (int i = 1; i < taille_pop; i++)
+	for (size_t i = 1; i < taille_pop; i++)
 	{
 		somme_fitness += individus[i]->fitness;
 		if (fitness_max < individus[i]->fitness)
@@ -136,22 +140,26 @@ chromosome *population::selection_roulette()
 void population::remplacement_roulette(chromosome *individu)
 {
 	int somme_fitness = individus[0]->fitness;
-	for (int i = 1; i < taille_pop; i++)
+	int fitness_max = individus[0]->fitness;
+	int somme_portion;
+
+	for (size_t i = 1; i < taille_pop; i++)
+	{
 		somme_fitness += individus[i]->fitness;
-
-	double variable_alea;
+		if (fitness_max < individus[i]->fitness)
+			fitness_max = individus[i]->fitness;
+	}
+	somme_portion = fitness_max * taille_pop - somme_fitness;
 	int ind = ordre[0];
-	double portion;
-
 	while (ordre[0] == ind)
 	{
-		variable_alea = Random::aleatoire(1000) / 1000.0;
+		double variable_alea = Random::aleatoire(1000) / 1000.0;
 		ind = 0;
-		portion = individus[0]->fitness * 1. / somme_fitness;
-		while ((ind < taille_pop - 1) && (variable_alea > portion))
+		double portion = (fitness_max - individus[0]->fitness) * 1. / somme_portion;
+		while ((ind < taille_pop - 1) && (variable_alea >= portion))
 		{
 			ind++;
-			portion += individus[ind]->fitness * 1. / somme_fitness;
+			portion += (fitness_max - individus[ind]->fitness) * 1. / somme_portion;
 		}
 	}
 	individus[ind]->copier(individu);
@@ -228,7 +236,7 @@ void population::remplacement_ranking(chromosome *individu, float taux_ranking)
 void population::afficher()
 {
 	cout << "Poputalion de " << taille_pop << " individus :" << endl;
-	for (int i = 0; i < taille_pop; i++)
+	for (size_t i = 0; i < taille_pop; i++)
 	{
 		cout << "individu " << i << ", rang : " << ordre[i] << " ";
 		individus[i]->afficher();

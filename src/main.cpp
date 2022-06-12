@@ -23,10 +23,10 @@ int main(int argc, char **argv)
 	Random::randomize();
 
 	// valeurs par defaut
-	int nb_generation = 50;
+	int nb_generation = 500000;
 	size_t taille_population = 20;
 	float taux_croisement = 0.8;
-	float taux_mutation = 0.5;
+	float taux_mutation = 0.3;
 	size_t taille_chromosome = 100;
 	string folderInstance = "instances/100-10";
 
@@ -69,9 +69,9 @@ int main(int argc, char **argv)
 	//    6. nom du dossier indiquant l'instance
 
 	// lance l'algorithme �volutionniste
-	// chromosome *best = algo.optimiser();
+	chromosome *best = algo.optimiser();
 
 	// affiche la fitness du meilleur individu trouv�
-	// cout << "La meilleure solution trouvee est : ";
+	cout << "La meilleure solution trouvee est : ";
 	// best->afficher();
 }

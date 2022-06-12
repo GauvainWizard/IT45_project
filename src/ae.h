@@ -56,6 +56,12 @@ public:
 	 */
 	void construction_distance(string nom_dossier);
 
+	/**
+	 * @brief Construit les facteurs de correlation
+	 * @param nom_dossier nom du dossier contenant les fichiers CSV
+	 */
+	void construction_correlation(string nom_dossier);
+
 	// constuie la matrice des distances
 	chromosome *optimiser(); // fonction principale qui d�cit le d�roulement de l'algorithme �volusionniste
 
