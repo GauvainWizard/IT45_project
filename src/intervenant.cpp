@@ -104,7 +104,23 @@ bool Intervenant::estDisponible(const Mission mission, const vector<int> gene) c
 bool Intervenant::travailleLeJour(const Jour jour, const vector<int> gene) const
 {
     // on vérifie si l'intervenant travaille le jour donné
-    return getMissionsJour(jour, gene).size() > 0;
+    // return getMissionsJour(jour, gene).size() > 0;
+    vector<Mission> missionsRetour;
+    // On reserve la mémoire pour la liste
+    missionsRetour.reserve(gene.size());
+    // on fait la liste des missions de l'intervenant le jour de la mission
+    for (size_t i = 0; i < gene.size(); ++i)
+    {
+        // on vérifie si la mission que l'on regarde est du même jour que la mission donnée et que c'est l'intervenant concerné
+        if (missions[i].getJour() == jour && gene[i] == id)
+        {
+            // on ajoute la mission à la liste
+            return true;
+        }
+    }
+
+    // On retourne la liste
+    return false;
 }
 
 vector<Mission> Intervenant::getMissionsJour(const Jour jour, const vector<int> gene) const

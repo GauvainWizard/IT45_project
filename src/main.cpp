@@ -25,10 +25,10 @@ int main(int argc, char **argv)
 	Random::randomize();
 
 	// valeurs par defaut
-	size_t nb_generation = 150000;
-	size_t taille_population = 25;
+	size_t nb_generation = 1000000;
+	size_t taille_population = 50;
 	float taux_croisement = 0.8;
-	float taux_mutation = 0.3;
+	float taux_mutation = 0.5;
 	size_t taille_chromosome = 100;
 	string folderInstance = "instances/100-10";
 
@@ -76,5 +76,5 @@ int main(int argc, char **argv)
 	// affiche la fitness du meilleur individu trouv�
 	cout << "La meilleure solution trouvee est : ";
 
-	// best->afficher();
+	best->afficher();
 }
