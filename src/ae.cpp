@@ -170,7 +170,7 @@ void Ae::croisement2LOX(chromosome *parent1, chromosome *parent2,
 {
 }
 
-void Ae::construction_correlation(string nom_dossier)
+void Ae::construction_correlation(const string nom_dossier)
 {
 	double parseTemps[2] = {24, 35}; // tableau pour convertir en heures
 	// alpha
@@ -196,7 +196,7 @@ void Ae::construction_correlation(string nom_dossier)
 	kappaC = (100) / (kappaC / intervenants.getListe()->size());
 }
 
-void Ae::construction_distance(string nom_dossier)
+void Ae::construction_distance(const string nom_dossier)
 {
 	// Concatenation du nom du dossier et du nom du fichier
 	string path = nom_dossier + "/Distances.csv";
@@ -217,7 +217,7 @@ void Ae::construction_distance(string nom_dossier)
 	}
 }
 
-void Ae::construction_intervenants(string nom_dossier)
+void Ae::construction_intervenants(const string nom_dossier)
 {
 	// Concatenation du nom du dossier et du nom du fichier
 	string path = nom_dossier + "/Intervenants.csv";
@@ -289,7 +289,7 @@ void Ae::construction_intervenants(string nom_dossier)
 	}
 }
 
-void Ae::construction_missions(string nom_dossier)
+void Ae::construction_missions(const string nom_dossier)
 {
 	// Concatenation du nom du dossier et du nom du fichier
 	string path = nom_dossier + "/Missions.csv";

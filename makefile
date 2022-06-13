@@ -8,12 +8,13 @@ CPPFLAGS := \
 	-L/lib \
 	-L/usr/lib \
 	-L/usr/local/lib
-CXXFLAGS := -c -g -Wall -pedantic -std=c++11 -Ofast -march=native
+CXXFLAGS := -c -g -Wall -flto -pedantic -std=c++11 -O3 -march=native
 
 main: $(OBJ_FILES)
 	$(CXX) $(LDFLAGS) $(CPPFLAGS) -o $@ $^
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	mkdir -p obj/
 	$(CXX) $(CXXFLAGS) -o $@ $<
 
 clean : 

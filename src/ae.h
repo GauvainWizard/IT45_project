@@ -41,25 +41,25 @@ public:
 	 * @brief Construit la liste des intervenants
 	 * @param nom_dossier : nom du dossier contenant les fichiers CSV
 	 */
-	void construction_intervenants(string nom_dossier);
+	void construction_intervenants(const string nom_dossier);
 
 	/**
 	 * @brief Construit la liste des missions
 	 * @param nom_dossier nom du dossier contenant les fichiers CSV
 	 */
-	void construction_missions(string nom_dossier);
+	void construction_missions(const string nom_dossier);
 
 	/**
 	 * @brief Construit la liste des distances
 	 * @param nom_dossier nom du dossier contenant les fichiers CSV
 	 */
-	void construction_distance(string nom_dossier);
+	void construction_distance(const string nom_dossier);
 
 	/**
 	 * @brief Construit les facteurs de correlation
 	 * @param nom_dossier nom du dossier contenant les fichiers CSV
 	 */
-	void construction_correlation(string nom_dossier);
+	void construction_correlation(const string nom_dossier);
 
 	// constuie la matrice des distances
 	chromosome *optimiser(); // fonction principale qui d�cit le d�roulement de l'algorithme �volusionniste
