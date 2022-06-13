@@ -25,8 +25,8 @@ int main(int argc, char **argv)
 	Random::randomize();
 
 	// valeurs par defaut
-	size_t nb_generation = 100000;
-	size_t taille_population = 25;
+	size_t nb_generation = 1000000;
+	size_t taille_population = 30;
 	float taux_croisement = 0.8;
 	float taux_mutation = 0.5;
 	size_t taille_chromosome = 100;
