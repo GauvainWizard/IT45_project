@@ -34,6 +34,8 @@ public:
 
     void ordonner();
     void reordonner();
+    void reordonner_critere2();
+    void reordonner_critere3();
     void afficher();
 };
 

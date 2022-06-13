@@ -34,7 +34,7 @@ chromosome::~chromosome()
 // �valuation d'une solution : fonction qui calcule la fitness d'une solution
 bool chromosome::evaluer()
 {
-	fitness = 0;
+	critere1 = 0;
 	double parseTempsSemaine[2] = {24, 35};						   // tableau pour convertir en heures le temps partiel et temps plein par semaine
 	double parseTempsJour[2] = {6, 8};							   // tableau pour convertir en heures le temps partiel et temps plein par jour
 	double moyenneD = 0;										   // moyenne des distances
@@ -43,7 +43,9 @@ bool chromosome::evaluer()
 	double sOH = 0;												   // sigma OH (écart type des heures supplémentaires)
 	double sWH = 0;												   // sigma WH (écart type des heures non travaillées)
 	double sD = 0;												   // sigma D (écart type des distances)
+	double sumWOH = 0;											   // somme des heures non travaillées et des heures supplémentaires
 	double penalite = 0;										   // somme des pénalités
+	double maxD = 0;											   // distance maximum parcourure
 	const size_t nbMissions = missions.size();					   // nombre de missions
 	const size_t nbIntervenants = intervenants.getListe()->size(); // nombre d'intervenants
 	vector<double> heuresTravaillees;							   // heures de travail des employées
@@ -112,7 +114,23 @@ bool chromosome::evaluer()
 					if ((missionsJour[k].getHoraires()[0] <= missionsJour[k + 1].getHoraires()[0] && missionsJour[k].getHoraires()[1] + tempsTrajet > missionsJour[k + 1].getHoraires()[0]) || (missionsJour[k].getHoraires()[0] < missionsJour[k + 1].getHoraires()[1] + tempsTrajet && missionsJour[k].getHoraires()[1] >= missionsJour[k + 1].getHoraires()[1]))
 						// on retourne faux
 						return false;
+					// Vérifier qu'on a bien une pause d'au moins 1h entre 12h et 14h
+					double tempsTravail1214 = 0;
+					// Si on a une mission qui débute entre 12h et 14h
+					if (missionsJour[k].getHoraires()[0] > 12 * 60 && missionsJour[k].getHoraires()[0] < 14 * 60)
+						tempsTravail1214 += (14 * 60 - missionsJour[k].getHoraires()[0]);
+					// Si on a une mission qui finit entre 12h et 14h
+					if (missionsJour[k].getHoraires()[1] + tempsTrajet > 12 * 60 && missionsJour[k].getHoraires()[1] + tempsTrajet < 14 * 60)
+						tempsTravail1214 += (missionsJour[k].getHoraires()[1] + tempsTrajet - 12 * 60);
+					// Si on a une mission qui débute avant 12h et finit après 14h
+					if (missionsJour[k].getHoraires()[0] < 12 * 60 && missionsJour[k].getHoraires()[1] + tempsTrajet > 14 * 60)
+						tempsTravail1214 += (2 * 60);
+					// Si le tempsTravail1214 est supérieur à 1h
+					if (tempsTravail1214 > 60)
+						penalite += 5;
 				}
+				if (missionsJour[k].getSpecialite() != intervenants.getListe()->at(gene[i]).getSpecialite())
+					++critere2;
 				// On récupère le temps en minute que dure la mission
 				heuresTravailleesJour += missionsJour[k].getHoraires()[1] - missionsJour[k].getHoraires()[0];
 			}
@@ -120,10 +138,10 @@ bool chromosome::evaluer()
 			// heuresTravailleesJour = heuresTravaillees[i] - heuresTravailleesJour;
 			heuresSupJour = heuresTravailleesJour - parseTempsJour[intervenants.getListe()->at(i).getTemps()] * 60;
 			if ((heuresTravailleesJour) > parseTempsJour[intervenants.getListe()->at(i).getTemps()] * 60)
-				penalite += 10; // on ajoute une pénalite de 6
+				penalite += 6; // on ajoute une pénalite de 6
 			// // // Si on a dépassé les 2h d'heures supplémentaires dans la journée
 			if ((heuresSupJour) > 2 * 60)
-				penalite += 12; // on ajoute une pénalite de 5
+				penalite += 12; // on ajoute une pénalite de 12
 			heuresTravaillees[i] += heuresTravailleesJour;
 			missionsJour.clear();
 		}
@@ -146,6 +164,9 @@ bool chromosome::evaluer()
 			moyenneOH += heuresSup[i];
 			heuresNonTravaillees[i] = 0;
 		}
+		// si la distance maximum est dépassée
+		if (maxD < distancesTravail[i])
+			maxD = distancesTravail[i]; // on met à jour la distance maximum
 		// si les heures supp sont supérieurs à 10h
 		if (heuresSup[i] > 10)
 			penalite += 5; // on ajoute une pénalite de 5
@@ -156,6 +177,7 @@ bool chromosome::evaluer()
 	moyenneD /= nbIntervenants;
 	for (size_t i = 0; i < nbIntervenants; ++i)
 	{
+		sumWOH += heuresNonTravaillees[i] + heuresSup[i];
 		sOH += (heuresSup[i] - moyenneOH) * (heuresSup[i] - moyenneOH);
 		sWH += (heuresNonTravaillees[i] - moyenneWH) * (heuresNonTravaillees[i] - moyenneWH);
 		sD += (distancesTravail[i] - moyenneD) * (distancesTravail[i] - moyenneD);
@@ -163,26 +185,11 @@ bool chromosome::evaluer()
 	sWH /= nbIntervenants;
 	sOH /= nbIntervenants;
 	sD /= nbIntervenants;
-	fitness = (zetaC * sqrt(sWH) + gammaC * sqrt(sOH) + kappaC * sqrt(sD)) / 3;
-	fitness += penalite;
+	critere1 = (zetaC * sqrt(sWH) + gammaC * sqrt(sOH) + kappaC * sqrt(sD)) / 3;
+	critere1 += penalite;
+	critere2 *= alphaC;
+	critere3 = (betaC * sumWOH + kappaC * moyenneD + kappaC * maxD) / 3;
 	return true;
-}
-
-void chromosome::calcul_critere2()
-{
-	// Nombre d’affectations dont la specialite est insatisfaite
-	double penalties = 0;
-
-	// Parcours de la liste des missions (gene)
-	for (size_t i = 0; i < taille; ++i)
-	{
-		// Si specialite de la mission i different de la specialite de l'intervenant affecte a cette mission
-		if (missions[i].getSpecialite() != intervenants.getListe()->at(gene[i]).getSpecialite())
-		{
-			++penalties;
-		}
-	}
-	critere2 = alphaC * penalties;
 }
 
 void chromosome::calcul_critere3()

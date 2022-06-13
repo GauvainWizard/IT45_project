@@ -50,7 +50,7 @@ chromosome *Ae::optimiser()
 	// on ordonne les indivudus selon leur fitness
 	pop->ordonner();
 
-	best_fitness = pop->individus[pop->ordre[0]]->fitness;
+	best_fitness = pop->individus[pop->ordre[0]]->critere1;
 	//  on affiche les statistiques de la population initiale
 	cout << "Quelques statistiques sur la population initiale" << endl;
 	pop->statistiques();
@@ -90,13 +90,16 @@ chromosome *Ae::optimiser()
 		pop->reordonner();
 
 		// Si l'un des nouveaux indivudus-solutions est le meilleur jamais rencont�
-		if (pop->individus[pop->ordre[0]]->fitness < best_fitness)
+		if (pop->individus[pop->ordre[0]]->critere1 < best_fitness)
 		{
-			best_fitness = pop->individus[pop->ordre[0]]->fitness;
+			best_fitness = pop->individus[pop->ordre[0]]->critere1;
 			cout << "Amelioration de la meilleure solution a la generation " << g << " : " << best_fitness << endl;
 			amelioration = g;
 		}
 	}
+	// reordonner par rapport au critere2 et critere3
+	pop->reordonner_critere2();
+	pop->reordonner_critere3();
 	//  on affiche les statistiques de la population finale
 	cout << "Quelques statistiques sur la population finale" << endl;
 	pop->statistiques();
