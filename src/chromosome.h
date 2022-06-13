@@ -17,6 +17,8 @@ public:
     vector<int> gene; // les g�nes du chromosome/solution
     size_t taille;    // la taille du chromosome = nombre de g�nes
     double fitness;   // la valeur de la fonction objectif (fitness) de la solution
+    double critere2;  // la valeur du critère 2 des meilleures solutions
+    double critere3;  // la valeur du critère 3 des meilleures solutions
 
     // CONSTRUCTEURS
     chromosome(size_t tc); // constructeur de l'objet al�atoirement
@@ -28,6 +30,13 @@ public:
     // fonction d'�valuation du chromosome (c-�-d calcul la fitness)
     //   Elle doit etre lanc�e � la creation des solution et apres
     //   l'ex�cution des operateurs de mutation et de croisement
+
+    // Calcul du nombre d’affectations dont la specialite est insatisfaite
+    void calcul_critere2();
+
+    // Calcul de distance parcourue et la somme du nombres des heures non-travaillees et supplementaires
+    void calcul_critere3();
+
     void copier(chromosome *source);  // copie le chromosome 'source'
     bool identique(chromosome *chro); // test si 2 chromosome sont identique
 

@@ -139,6 +139,28 @@ bool chromosome::evaluer()
 	fitness = (zetaC * sqrt(sWH) + gammaC * sqrt(sOH) + kappaC * sqrt(sD)) / 3;
 	return true;
 }
+
+void chromosome::calcul_critere2()
+{
+	// Nombre d’affectations dont la specialite est insatisfaite
+	double penalties = 0;
+
+	// Parcours de la liste des missions (gene)
+	for (size_t i = 0; i < taille; ++i)
+	{
+		// Si specialite de la mission i different de la specialite de l'intervenant affecte a cette mission
+		if (missions[i].getSpecialite() != intervenants.getListe()->at(gene[i]).getSpecialite())
+		{
+			++penalties;
+		}
+	}
+	critere2 = alphaC * penalties;
+}
+
+void chromosome::calcul_critere3()
+{
+}
+
 // copie les genes d'un chromosome. la fitness n'est reprise
 void chromosome::copier(chromosome *source)
 {
