@@ -10,10 +10,6 @@ population::population(size_t tp, size_t tc)
 	for (size_t i = 0; i < taille_pop; ++i)
 		individus[i] = new chromosome(tc);
 	ordre = new int[taille_pop];
-
-	// affiche la population initiale
-	// cout << "Population initiale : " << endl;
-	// afficher();
 }
 
 // destruction de l'objet "population"
@@ -92,6 +88,12 @@ void population::ordonner()
 //   apr�s un petit changement
 void population::reordonner()
 {
+	// tri par ordre croissant de fitness
+	// for (size_t i = 0; i < taille_pop - 1; ++i)
+	// 	for (size_t j = i + 1; j < taille_pop; ++j)
+	// 		if (individus[ordre[i]]->fitness > individus[ordre[j]]->fitness)
+	// 			swap(ordre[i], ordre[j]);
+
 	// tri par insertition (plus rapide dans ce cas) pour ré-ordonner les individus de la population
 	int inter;
 	for (size_t i = 1; i < taille_pop; ++i)
