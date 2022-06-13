@@ -85,31 +85,46 @@ public:
      *  @brief Retourne la compétence de la mission
      *  @return Competence de la mission
      */
-    const Competence getCompetence() const;
+    inline const Competence getCompetence() const
+    {
+        return competence;
+    }
 
     /**
      *  @brief Retourne la spécialité de la mission
      *  @return Specialite de la mission
      */
-    const Specialite getSpecialite() const;
+    inline const Specialite getSpecialite() const
+    {
+        return specialite;
+    }
 
     /**
      *  @brief Retourne le jour de la mission
      *  @return Jour de la mission
      */
-    const Jour getJour() const;
+    inline const Jour getJour() const
+    {
+        return jour;
+    }
 
     /**
      * @brief Retourne l'id de la mission
      * @return Id de la mission
      */
-    const int getId() const;
+    inline const int *getHoraires() const
+    {
+        return horaires;
+    }
 
     /**
      *  @brief Retourne les horaires de la mission
      *  @return Horaires de la mission
      */
-    const int *getHoraires() const;
+    inline const int getId() const
+    {
+        return id;
+    }
 };
 
 #endif /* MISSION_HPP_ */

@@ -48,28 +48,3 @@ Mission &Mission::operator=(const Mission &orig)
     this->id = orig.id;
     return *this;
 }
-
-const Competence Mission::getCompetence() const
-{
-    return competence;
-}
-
-const Specialite Mission::getSpecialite() const
-{
-    return specialite;
-}
-
-const Jour Mission::getJour() const
-{
-    return jour;
-}
-
-const int *Mission::getHoraires() const
-{
-    return horaires;
-}
-
-const int Mission::getId() const
-{
-    return id;
-}
