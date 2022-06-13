@@ -8,6 +8,7 @@
 #include <cstring>
 #include <vector>
 #include <string>
+#include <chrono>
 #include "population.h"
 #include "chromosome.h"
 #include "csvreader.h"
@@ -23,7 +24,8 @@ class Ae
 {
 public:
 	// ATTRIBUTS
-	size_t nbgenerations;	  // nombre de g�n�rations apr�s quoi la recherche est arr�t�e
+	// size_t nbgenerations; // nombre de g�n�rations apr�s quoi la recherche est arr�t�e
+	double temps_max;
 	size_t taille_pop;		  // nombre d'individus dans la population
 	double taux_croisement;	  // taux de croisement : valeur entre 0 et 1
 	double taux_mutation;	  // taux de mutation : valeur entre 0 et 1
@@ -31,7 +33,9 @@ public:
 	population *pop;		  // liste des individus de la population
 
 	// CONSTRUCTEURS
-	Ae(size_t nbg, size_t tp, double tcroisement, double tmutation, size_t tc, string nom_dossier);
+	// Ae(size_t nbg, size_t tp, double tcroisement, double tmutation, size_t tc, string nom_dossier);
+	Ae(double tp_max, size_t tp, double tcroisement, double tmutation, size_t tc, string nom_dossier);
+
 	// constructeur de l'objet Algaorithme evolutioniste
 	~Ae(); // destructeur de l'objet Ae
 

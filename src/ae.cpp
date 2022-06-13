@@ -13,9 +13,9 @@ using namespace std;
 
 // initialisation des param�tres de l'AG et g�n�ration de la population initiale
 
-Ae::Ae(size_t nbg, size_t tp, double tcroisement, double tmutation, size_t tc, string nom_dossier)
+Ae::Ae(double tp_max, size_t tp, double tcroisement, double tmutation, size_t tc, string nom_dossier)
 {
-	nbgenerations = nbg;
+	temps_max = tp_max;
 	taille_pop = tp;
 	taux_croisement = tcroisement;
 	taux_mutation = tmutation;
@@ -55,8 +55,12 @@ chromosome *Ae::optimiser()
 	cout << "Quelques statistiques sur la population initiale" << endl;
 	pop->statistiques();
 
+	auto start = std::chrono::system_clock::now();
+
 	// tant que le nombre de g�n�rations limite n'est pas atteint
-	for (size_t g = 0; g < nbgenerations; ++g)
+	// for (size_t g = 0; g < nbgenerations; ++g)
+	size_t g = 0;
+	while (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - start).count() != temps_max)
 	{
 		// s�lection de deux individus de la population courante
 		pere1 = pop->selection_roulette();
@@ -96,6 +100,7 @@ chromosome *Ae::optimiser()
 			cout << "Amelioration de la meilleure solution a la generation " << g << " : " << best_fitness << endl;
 			amelioration = g;
 		}
+		++g;
 	}
 	//  on affiche les statistiques de la population finale
 	cout << "Quelques statistiques sur la population finale" << endl;

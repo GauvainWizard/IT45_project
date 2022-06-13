@@ -25,7 +25,8 @@ int main(int argc, char **argv)
 	Random::randomize();
 
 	// valeurs par defaut
-	size_t nb_generation = 150000;
+	// size_t nb_generation = 150000;
+	double temps_max = 10;
 	size_t taille_population = 25;
 	float taux_croisement = 0.8;
 	float taux_mutation = 0.3;
@@ -34,7 +35,8 @@ int main(int argc, char **argv)
 
 	if (argc == 7)
 	{
-		nb_generation = atoi(argv[1]);
+		// nb_generation = atoi(argv[1]);
+		temps_max = atoi(argv[1]);
 		taille_population = atoi(argv[2]);
 		taux_croisement = atof(argv[3]);
 		taux_mutation = atof(argv[4]);
@@ -59,7 +61,7 @@ int main(int argc, char **argv)
 	// on parcourt les missions du fichier CSV
 	auto start = std::chrono::high_resolution_clock::now();
 	// initialise l'algorithme �volutionniste
-	Ae algo(nb_generation, taille_population, taux_croisement, taux_mutation, taille_chromosome, folderInstance);
+	Ae algo(temps_max, taille_population, taux_croisement, taux_mutation, taille_chromosome, folderInstance);
 	// arguments du constructeur de l'objet Ae
 	//    1. nombre de g�n�ration (entier > 0)
 	//    2. taille de la population (entier > 0)
