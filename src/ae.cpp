@@ -64,7 +64,7 @@ chromosome *Ae::optimiser()
 		// On effectue un croisementavec une probabilit� "taux_croisement"
 		if (Random::aleatoire(1000) / 1000.0 < taux_croisement)
 		{
-			croisement1X(pere1, pere2, fils1, fils2);
+			croisement1X(*pere1, *pere2, *fils1, *fils2);
 		}
 		else
 		{
@@ -118,18 +118,18 @@ chromosome *Ae::optimiser()
 //                         et l'enfant 2 avec les g�nes manquant en les pla�ant dans l'ordre du parent 1.
 //    Le 1ier fils est le produit de la partie haute du premier parent et
 //    de la partie basse du deuxi�me parent et inversement pour le 2�me fils
-void Ae::croisement1X(chromosome *parent1, chromosome *parent2,
-					  chromosome *enfant1, chromosome *enfant2)
+void Ae::croisement1X(chromosome &parent1, chromosome &parent2,
+					  chromosome &enfant1, chromosome &enfant2)
 {
 
-	size_t nb_genes = parent1->taille;
+	size_t nb_genes = parent1.taille;
 	vector<int> odre_parent1(nb_genes);
 	vector<int> odre_parent2(nb_genes);
 
 	for (size_t i = 0; i < nb_genes; ++i)
 	{
-		odre_parent1[parent1->gene[i]] = i;
-		odre_parent2[parent2->gene[i]] = i;
+		odre_parent1[parent1.gene[i]] = i;
+		odre_parent2[parent2.gene[i]] = i;
 	}
 
 	// 1) l'op�rateur 1X choisit de mani�re al�atoire le point de croisement
@@ -137,8 +137,8 @@ void Ae::croisement1X(chromosome *parent1, chromosome *parent2,
 
 	// 2) l'op�rateur 1X recopie le d�but du parent 1 au d�but de l'enfant 1
 	//                     et le d�but du parent 2 au d�but de l'enfant 2.
-	enfant1->copier(parent1);
-	enfant2->copier(parent2);
+	enfant1.copier(&parent1);
+	enfant2.copier(&parent2);
 
 	// 3) l'op�rateur 1X compl�te l'enfant 1 avec les g�nes manquant en les pla�ant dans l'ordre du parent 2
 	//                         et l'enfant 2 avec les g�nes manquant en les pla�ant dans l'ordre du parent 1.
@@ -146,10 +146,10 @@ void Ae::croisement1X(chromosome *parent1, chromosome *parent2,
 	{
 		for (size_t l = k + 1; l < nb_genes; ++l)
 		{
-			if (odre_parent2[enfant1->gene[k]] > odre_parent2[enfant1->gene[l]])
-				enfant1->echange_2_genes(k, l);
-			if (odre_parent1[enfant2->gene[k]] > odre_parent1[enfant2->gene[l]])
-				enfant2->echange_2_genes(k, l);
+			if (odre_parent2[enfant1.gene[k]] > odre_parent2[enfant1.gene[l]])
+				enfant1.echange_2_genes(k, l);
+			if (odre_parent1[enfant2.gene[k]] > odre_parent1[enfant2.gene[l]])
+				enfant2.echange_2_genes(k, l);
 		}
 	}
 }
@@ -160,13 +160,13 @@ void Ae::croisement1X(chromosome *parent1, chromosome *parent2,
 //                        et le d�but du parent 2 au d�but de l'enfant 2.
 // 3) l'op�rateur 2X compl�te l'enfant 1 avec les g�nes manquant en les pla�ant dans l'ordre du parent 2
 //                         et l'enfant 2 avec les g�nes manquant en les pla�ant dans l'ordre du parent 1.
-void Ae::croisement2X(chromosome *parent1, chromosome *parent2,
-					  chromosome *enfant_s1, chromosome *enfant_s2)
+void Ae::croisement2X(chromosome &parent1, chromosome &parent2,
+					  chromosome &enfant_s1, chromosome &enfant_s2)
 {
 }
 
-void Ae::croisement2LOX(chromosome *parent1, chromosome *parent2,
-						chromosome *enfant_s1, chromosome *enfant_s2)
+void Ae::croisement2LOX(chromosome &parent1, chromosome &parent2,
+						chromosome &enfant_s1, chromosome &enfant_s2)
 {
 }
 

@@ -66,14 +66,14 @@ public:
 
 	// OPERATEURS DE CROISEMENT
 	// op�rateur de croisement 1X de deux chromosomes
-	void croisement1X(chromosome *parent1, chromosome *parent2,
-					  chromosome *enfant1, chromosome *enfant2);
+	void croisement1X(chromosome &parent1, chromosome &parent2,
+					  chromosome &enfant1, chromosome &enfant2);
 	// op�rateur de croisement 1X de deux chromosomes
-	void croisement2X(chromosome *parent1, chromosome *parent2,
-					  chromosome *enfant1, chromosome *enfant2);
+	void croisement2X(chromosome &parent1, chromosome &parent2,
+					  chromosome &enfant1, chromosome &enfant2);
 	// op�rateur de croisement 2LOX de deux chromosomes
-	void croisement2LOX(chromosome *parent1, chromosome *parent2,
-						chromosome *enfant_s1, chromosome *enfant_s2);
+	void croisement2LOX(chromosome &parent1, chromosome &parent2,
+						chromosome &enfant_s1, chromosome &enfant_s2);
 };
 
 #endif
