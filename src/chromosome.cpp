@@ -18,8 +18,17 @@ chromosome::chromosome(size_t tc)
 	{
 		// on recupère la liste des index des intervenants qui ont la même compétence que la mission et qui sont disponibles
 		index = intervenants.getIndex(missions[i], gene);
-		// on tire aléatoirement un index dans cette liste et on ajoute l'index dans le chromosome
-		gene.push_back(index[Random::aleatoire(index.size())]);
+		// Si on n'a pas trouvé d'intervenant, on reset
+		if (index.size() == 0)
+		{
+			gene.clear();
+			i = -1;
+		}
+		else
+		{
+			// on tire aléatoirement un index dans cette liste et on ajoute l'index dans le chromosome
+			gene.push_back(index[Random::aleatoire(index.size())]);
+		}
 	}
 	// on affiche le chromosome
 	// cout << "Chromosome : ";
@@ -98,7 +107,7 @@ bool chromosome::evaluer()
 				heuresTravailleesJour += tempsTrajetSESSADD;
 				// Si on a travaille sur une amplitude supérieure à 12h
 				if ((missionsJour[nbMissionsJour - 1].getHoraires()[1] + tempsTrajetSESSADD) - (missionsJour[0].getHoraires()[0] - tempsTrajetSESSAD1) > 12 * 60)
-					penalite += 3;
+					penalite += 3; // on ajoute une pénalité de 3
 			}
 			// On boucle sur les missions du jour
 			for (size_t k = 0; k < nbMissionsJour; ++k)
@@ -127,7 +136,7 @@ bool chromosome::evaluer()
 						tempsTravail1214 += (2 * 60);
 					// Si le tempsTravail1214 est supérieur à 1h
 					if (tempsTravail1214 > 60)
-						penalite += 2;
+						penalite += 2; // on ajoute une pénalité de 2
 				}
 				if (missionsJour[k].getSpecialite() != intervenants.getListe()->at(gene[i]).getSpecialite())
 					++critere2;
@@ -138,10 +147,10 @@ bool chromosome::evaluer()
 			// heuresTravailleesJour = heuresTravaillees[i] - heuresTravailleesJour;
 			heuresSupJour = heuresTravailleesJour - parseTempsJour[intervenants.getListe()->at(i).getTemps()] * 60;
 			if ((heuresTravailleesJour) > parseTempsJour[intervenants.getListe()->at(i).getTemps()] * 60)
-				penalite += 3; // on ajoute une pénalite de 6
+				penalite += 5; // on ajoute une pénalite de 5
 			// // // Si on a dépassé les 2h d'heures supplémentaires dans la journée
 			if ((heuresSupJour) > 2 * 60)
-				penalite += 3; // on ajoute une pénalite de 12
+				penalite += 5; // on ajoute une pénalite de 5
 			heuresTravaillees[i] += heuresTravailleesJour;
 			missionsJour.clear();
 		}
@@ -169,7 +178,7 @@ bool chromosome::evaluer()
 			maxD = distancesTravail[i]; // on met à jour la distance maximum
 		// si les heures supp sont supérieurs à 10h
 		if (heuresSup[i] > 10)
-			penalite += 1; // on ajoute une pénalite de 5
+			penalite += 1; // on ajoute une pénalite de 1
 		moyenneD += distancesTravail[i];
 	}
 	moyenneOH /= nbIntervenants;

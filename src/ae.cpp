@@ -127,19 +127,20 @@ chromosome *Ae::optimiser()
 			taux_croisement = taux_croisement;
 			best_fitness = pop->individus[pop->ordre[0]]->critere1;
 			cout << "Amelioration de la meilleure solution a la generation " << g << " : " << best_fitness << endl;
-			cout << "Le temps est de " << std::setprecision(9) << std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - start).count() << " secondes" << endl;
+			chrono::duration<double> diff = std::chrono::system_clock::now() - start;
+			cout << "Le temps est de " << std::setprecision(9) << diff.count() << " secondes" << endl;
 			amelioration = g;
 		}
-		// else if (g > amelioration + 15000 && pop->individus[pop->ordre[0]]->penalite != 0)
-		// {
-		// 	for (size_t ind = taille_pop - 1; ind > (taille_pop - 0.50 * taille_pop); --ind)
-		// 	{
-		// 		pop->individus[pop->ordre[ind]]->copier(new chromosome(taille_chromosome));
-		// 		pop->individus[pop->ordre[ind]]->evaluer();
-		// 	}
-		// 	pop->reordonner();
-		// 	amelioration = g;
-		// }
+		else if (g > amelioration + 15000 && pop->individus[pop->ordre[0]]->penalite != 0)
+		{
+			for (size_t ind = taille_pop - 1; ind > (taille_pop - 0.75 * taille_pop); --ind)
+			{
+				pop->individus[pop->ordre[ind]]->copier(new chromosome(taille_chromosome));
+				pop->individus[pop->ordre[ind]]->evaluer();
+			}
+			pop->reordonner();
+			amelioration = g;
+		}
 		++g;
 	}
 	// reordonner par rapport au critere2 et critere3
