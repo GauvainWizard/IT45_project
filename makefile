@@ -15,10 +15,11 @@ main: $(OBJ_FILES)
 	$(CXX) $(LDFLAGS) $(CPPFLAGS) -o $@ $^
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	mkdir -p obj/
 	$(CXX) $(CXXFLAGS) -o $@ $<
 
 clean : 
-	rm -f *.o *~
+	rm -f $(OBJ_DIR)/*.o *~
 
 clear : 
 	make clean;
