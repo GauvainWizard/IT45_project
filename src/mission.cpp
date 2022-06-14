@@ -1,11 +1,3 @@
-/**
- * @author BERNARD Samuel
- * @file mission.cpp
- * @date 01/06/2022
- * @brief Implémentation des méthodes de la classe mission
- */
-
-// Inclusion du fichier d'interface de la classe mission
 #include "mission.h"
 
 Mission::Mission()
@@ -34,8 +26,6 @@ Mission::Mission(const Competence c, const Specialite s, const Jour j, const int
 
 Mission::~Mission()
 {
-    /* Rien à mettre ici car on ne fait pas d'allocation dynamique
-       dans la classe Pression. */
 }
 
 Mission &Mission::operator=(const Mission &orig)

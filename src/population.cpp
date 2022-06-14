@@ -2,7 +2,6 @@
 
 using namespace std;
 
-// initialisation d'une population de solutions
 population::population(size_t tp, size_t tc)
 {
 	taille_pop = tp;
@@ -12,7 +11,6 @@ population::population(size_t tp, size_t tc)
 	ordre = new int[taille_pop];
 }
 
-// destruction de l'objet "population"
 population::~population()
 {
 	for (size_t i = 0; i < taille_pop; ++i)
@@ -21,7 +19,6 @@ population::~population()
 	delete ordre;
 }
 
-// statistiques sur la population
 void population::statistiques()
 {
 	double moyenne = 0;
@@ -43,7 +40,6 @@ void population::statistiques()
 		 << individus[ordre[taille_pop - 1]]->critere1 << "]" << endl;
 }
 
-// Similitude de la population
 void population::similitude()
 {
 	size_t nb_ind_id_1, nb_ind_id_2, nb_ind_id_3;
@@ -61,7 +57,6 @@ void population::similitude()
 	}
 }
 
-// compte le nombre de chromosomes similaires
 size_t population::nb_chromosomes_similaires(chromosome *chro)
 {
 	size_t nb = 0;
@@ -71,30 +66,22 @@ size_t population::nb_chromosomes_similaires(chromosome *chro)
 	return nb;
 }
 
-// Oronne les individus de la population par ordre croissant de fitness
 void population::ordonner()
 {
 	for (size_t i = 0; i < taille_pop; ++i)
 		ordre[i] = i;
 
-	// tri par ordre croissant de fitness
+	// Tri par ordre croissant de fitness
 	for (size_t i = 0; i < taille_pop - 1; ++i)
 		for (size_t j = i + 1; j < taille_pop; ++j)
 			if (individus[ordre[i]]->critere1 > individus[ordre[j]]->critere1)
 				swap(ordre[i], ordre[j]);
 }
 
-// R�-ordonne le classement des individus de la population par ordre croissant de fitness
-//   apr�s un petit changement
 void population::reordonner()
 {
-	// tri par ordre croissant de fitness
-	// for (size_t i = 0; i < taille_pop - 1; ++i)
-	// 	for (size_t j = i + 1; j < taille_pop; ++j)
-	// 		if (individus[ordre[i]]->critere1 > individus[ordre[j]]->critere1)
-	// 			swap(ordre[i], ordre[j]);
 
-	// tri par insertition (plus rapide dans ce cas) pour ré-ordonner les individus de la population
+	// Tri par insertition (plus rapide dans ce cas) pour ré-ordonner les individus de la population
 	int inter;
 	for (size_t i = 1; i < taille_pop; ++i)
 	{
@@ -111,7 +98,7 @@ void population::reordonner()
 
 void population::reordonner_critere2()
 {
-	// tri par ordre croissant de critere2
+	// Tri par ordre croissant de critere2
 	double best_fitness = individus[ordre[0]]->critere1;
 	size_t taille = 0;
 	while (best_fitness == individus[ordre[taille]]->critere1)
@@ -124,7 +111,7 @@ void population::reordonner_critere2()
 
 void population::reordonner_critere3()
 {
-	// tri par ordre croissant de critere3
+	// Tri par ordre croissant de critere3
 	double best_fitness = individus[ordre[0]]->critere1;
 	double critere2 = individus[ordre[0]]->critere2;
 	size_t taille = 0;
@@ -136,8 +123,6 @@ void population::reordonner_critere3()
 				swap(ordre[i], ordre[j]);
 }
 
-// SELECTION PAR ROULETTE BIAISEE
-// op�rateur de s�lection bas� sur la fonction fitness
 chromosome *population::selection_roulette()
 {
 	int somme_fitness = individus[0]->critere1;
@@ -164,8 +149,6 @@ chromosome *population::selection_roulette()
 	return individus[ind];
 }
 
-// op�rateur de remplacement bas� sur la roulette biais�e d'un individu de la population
-//   par un nouveau individu donn� en argument
 void population::remplacement_roulette(chromosome *individu)
 {
 	int somme_fitness = individus[0]->critere1;
@@ -195,7 +178,6 @@ void population::remplacement_roulette(chromosome *individu)
 	individus[ind]->critere1 = individu->critere1;
 }
 
-// affichage de la population, de son rang et de sa fitness
 void population::afficher()
 {
 	cout << "Poputalion de " << taille_pop << " individus :" << endl;

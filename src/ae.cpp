@@ -150,10 +150,10 @@ chromosome *Ae::optimiser()
 	// Reordonner par rapport aux critere2 et critere3
 	pop->reordonner_critere2();
 	pop->reordonner_critere3();
-	//  On affiche les statistiques de la population finale
+	// On affiche les statistiques de la population finale
 	cout << "Quelques statistiques sur la population finale" << endl;
 	pop->statistiques();
-	//  On affiche la consanginite de la population finale
+	// On affiche la consanginite de la population finale
 	pop->similitude();
 
 	// Retourner le meilleur individu rencontre pendant la recherche
