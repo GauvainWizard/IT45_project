@@ -7,35 +7,92 @@
 #include "chromosome.h"
 #include "global.h"
 
-// La classe population englobe plusieurs solution potentielle du probleme
+/**
+ * @class population
+ * @brief Classe représentant une population de chromosomes
+ */
 class population
 {
 public:
-    // ATTRIBUTS
-    chromosome **individus; // liste des individus de la population
-    size_t taille_pop;      // nombre d'individus de la population
-    int *ordre;             // tableau donnat l'ordre des individus dans la population
-                            //   du meilleur au plus mauvais en fonction de la fitness	population(int tp, int tc);    // constructeur de l'objet
+    /**
+     * @brief Liste des individus de la population
+     */
+    chromosome **individus;
 
-    // CONSTRUCTEURS
-    population(size_t tp, size_t tc); // constructeur de l'objet
-    ~population();                    // destructeur de l'objet
+    /**
+     * @brief Nombre d'individus de la population
+     */
+    size_t taille_pop;
 
-    // METHODES
-    void statistiques(); // affiche quelques statistiques sur la population
+    /**
+     * @brief Tableau donnant l'ordre des individus dans la population
+     * du meilleur au plus mauvais en fonction de la fitness
+     */
+    int *ordre;
+
+    /**
+     * @brief Constructeur
+     * @param tp - Taille de la population
+     * @param tc - Taille du chromosome
+     */
+    population(size_t tp, size_t tc);
+
+    /**
+     * @brief Destructeur
+     */
+    ~population();
+
+    /**
+     * @brief Affichage des statistiques sur la population
+     */
+    void statistiques();
+
+    /**
+     * @brief Compte le nombre de chromosomes similaires à 'chro'
+     * @param chro - pointeur sur un chromosome comparé à la population
+     * @return nombre de chromosomes similaires issus de la population
+     */
     size_t nb_chromosomes_similaires(chromosome *chro);
-    // compte le nombre de chromosomes similaires � 'chro'
-    void similitude(); // affiche les r�sultats du comptage de chromosomes similaires
-                       // aux meilleurs individus de la population.
 
-    // OPERATEURS DE SELECTION ET DE REMPLACEMENT
-    chromosome *selection_roulette();                 // sel�ction par roulette biais�e d'un individu de la population
-    void remplacement_roulette(chromosome *individu); // rempacement par roulette biais�e d'un individu de la population par un chromosome donn�
+    /**
+     * @brief Affichage du nombre de chromosomes issus de la population ayant les trois meilleures fitness
+     */
+    void similitude();
 
+    /**
+     * @brief Selection par roulette biaisée d'un individu de la population
+     */
+    chromosome *selection_roulette();
+
+    /**
+     * @brief Rempacement par roulette biaisée d'un individu de la population par un chromosome donné
+     * @param individu - chromosome ajouté dans la population
+     */
+    void remplacement_roulette(chromosome *individu);
+
+    /**
+     * @brief Ordonne les individus de la population par ordre croissant de fitness
+     */
     void ordonner();
+
+    /**
+     * @brief Réordonne le classement des individus de la population par ordre croissant de fitness après un petit changement
+     */
     void reordonner();
+
+    /**
+     * @brief Réordonne le classement des individus de la population par ordre croissant de fitness avec prise en compte du critère 2
+     */
     void reordonner_critere2();
+
+    /**
+     * @brief Réordonne le classement des individus de la population par ordre croissant de fitness avec prise en compte du critère 3
+     */
     void reordonner_critere3();
+
+    /**
+     * @brief Afficher de chaque individu de la population, son rang et sa fitness
+     */
     void afficher();
 };
 

@@ -17,7 +17,7 @@ class chromosome
 {
 public:
     /**
-     * @brief Liste de gênes formant le chromosome
+     * @brief Liste entière de gênes formant le chromosome
      */
     vector<int> gene;
 
@@ -58,15 +58,15 @@ public:
     ~chromosome();
 
     /**
-     * @brief Affichage de la solution
-     */
-    void afficher();
-
-    /**
      * @brief Evaluation du chromosome, calcul des critères 1, 2 et 3
      * @return Booléen retournant faux si une contrainte dure n'est pas validée, vrai sinon.
      */
     bool evaluer();
+
+    /**
+     * @brief Affichage de la solution
+     */
+    void afficher();
 
     /**
      * @brief Copier le chromosome source vers le chromosome this

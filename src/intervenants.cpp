@@ -1,11 +1,3 @@
-/**
- * @author CLAUSS Gauvain
- * @file intervenants.cpp
- * @date 10/06/2022
- * @brief Implémentation des méthodes de la classe intervenants
- */
-
-// Inclusion du fichier d'interface de la classe intervenants
 #include "intervenants.h"
 #include "global.h"
 

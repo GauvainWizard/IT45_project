@@ -1,15 +1,6 @@
-/**
- * @author BERNARD Samuel
- * @file mission.h
- * @date 01/06/2022
- * @brief Déclaration de la classe mission, de ses attributs et méthodes associées
- */
-
-// Define guards
 #ifndef MISSION_HPP_
 #define MISSION_HPP_
 
-// Includes
 #include <stdio.h>
 #include "enum.h"
 
@@ -20,8 +11,6 @@
 class Mission
 {
 private:
-    // ATTRIBUTS
-
     /**
      * @brief Compétence de la mission
      */

@@ -21,7 +21,7 @@ int main(int argc, char **argv)
 //    5. nombre de villes (=taille d'un chromosome)
 //    6. nom du fichier indiquant les distances entre villes
 {
-	// initialise le g�n�rateur de nombre al�atoire
+	// Initialise le générateur de nombre aléatoire
 	Random::randomize();
 
 	double temps_max = 20;
@@ -55,9 +55,9 @@ int main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 
-	// on parcourt les missions du fichier CSV
+	// On parcourt les missions du fichier CSV
 	auto start = std::chrono::high_resolution_clock::now();
-	// initialise l'algorithme �volutionniste
+	// Initialise l'algorithme �volutionniste
 	Ae algo(temps_max, taille_population, taux_croisement, taux_mutation, taille_chromosome, folderInstance);
 	// arguments du constructeur de l'objet Ae
 	//    1. nombre de g�n�ration (entier > 0)
@@ -67,12 +67,16 @@ int main(int argc, char **argv)
 	//    5. nombre de villes (=taille d'un chromosome)
 	//    6. nom du dossier indiquant l'instance
 
-	// lance l'algorithme �volutionniste
+	// Lancer l'algorithme évolutionniste
 	chromosome *best = algo.optimiser();
+
+	// Lancer chronomètre
 	auto end = chrono::high_resolution_clock::now();
+
 	chrono::duration<double> diff = end - start;
 	cout << "Temps d'execution : " << std::setprecision(9) << diff.count() << "s" << endl;
-	// affiche la fitness du meilleur individu trouv�
+
+	// Affiche la fitness du meilleur individu trouvé
 	cout << "La meilleure solution trouvee est : ";
 
 	best->afficher();
