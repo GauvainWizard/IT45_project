@@ -112,6 +112,10 @@ bool chromosome::evaluer()
 			// On boucle sur les missions du jour
 			for (size_t k = 0; k < nbMissionsJour; ++k)
 			{
+				// Compétence de la mission doit correspondre à la compétence de l'intervenant, sinon solution non valide
+				if (missionsJour[k].getCompetence() != intervenants.getListe()->at(i).getCompetence())
+					return false;
+
 				if (k + 1 < nbMissionsJour)
 				{
 					distancesTravail[i] += distances[(missionsJour[k].getId() + 1) * (missions.size() + 1) + missionsJour[k + 1].getId() + 1];
@@ -199,10 +203,6 @@ bool chromosome::evaluer()
 	critere2 *= alphaC;
 	critere3 = (betaC * sumWOH + kappaC * moyenneD + kappaC * maxD) / 3;
 	return true;
-}
-
-void chromosome::calcul_critere3()
-{
 }
 
 // copie les genes d'un chromosome. la fitness n'est reprise

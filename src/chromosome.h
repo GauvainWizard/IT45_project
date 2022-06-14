@@ -9,45 +9,104 @@
 #include "random.h"
 #include "global.h"
 
-// La classe chromosome represente la structure d'une solution du probl�me
+/**
+ * @class chromosome
+ * @brief Classe représentant la structure d'une solution du problème
+ */
 class chromosome
 {
 public:
-    // ATTRIBUTS
-    vector<int> gene; // les g�nes du chromosome/solution
-    size_t taille;    // la taille du chromosome = nombre de g�nes
-    double penalite;  // la penalite du chromosome
-    double critere1;  // la valeur de la fonction objectif (fitness) de la solution
-    double critere2;  // la valeur du critère 2 des meilleures solutions
-    double critere3;  // la valeur du critère 3 des meilleures solutions
+    /**
+     * @brief Liste de gênes formant le chromosome
+     */
+    vector<int> gene;
 
-    // CONSTRUCTEURS
-    chromosome(size_t tc); // constructeur de l'objet al�atoirement
-    ~chromosome();         // destructeur de l'objet
+    /**
+     * @brief Taille du chromosome (nombre de gênes)
+     */
+    size_t taille;
 
-    // METHODES
-    void afficher(); // fonction d'affichage du chromosome (i.e. de la solution)
+    /**
+     * @brief Pénalité du chromosome (somme des pénalités des contraintes)
+     */
+    double penalite;
+
+    /**
+     * @brief Valeur de la fonction objectif (fitness) de la solution
+     */
+    double critere1;
+
+    /**
+     * @brief Valeur du critère 2 des meilleures solutions
+     */
+    double critere2;
+
+    /**
+     * @brief Valeur du critère 3 des meilleures solutions
+     */
+    double critere3;
+
+    /**
+     * @brief Constructeur aléatoire
+     * @param tc - Taille du chromosome
+     */
+    chromosome(size_t tc);
+
+    /**
+     * @brief Destructeur
+     */
+    ~chromosome();
+
+    /**
+     * @brief Affichage de la solution
+     */
+    void afficher();
+
+    /**
+     * @brief Evaluation du chromosome, calcul des critères 1, 2 et 3
+     * @return Booléen retournant faux si une contrainte dure n'est pas validée, vrai sinon.
+     */
     bool evaluer();
-    // fonction d'�valuation du chromosome (c-�-d calcul la fitness)
-    //   Elle doit etre lanc�e � la creation des solution et apres
-    //   l'ex�cution des operateurs de mutation et de croisement
 
-    // Calcul du nombre d’affectations dont la specialite est insatisfaite
-    void calcul_critere2();
+    /**
+     * @brief Copier le chromosome source vers le chromosome this
+     * @param source - pointeur sur un chromosome à copier
+     */
+    void copier(chromosome *source);
 
-    // Calcul de distance parcourue et la somme du nombres des heures non-travaillees et supplementaires
-    void calcul_critere3();
+    /**
+     * @brief Test si 2 chromosome sont identiques
+     * @param chro - pointeur sur un chromosome à comparer aevc this
+     * @return Booléen retournant vrai si les deux chromosomes sont identiques, faux sinon.
+     */
+    bool identique(chromosome *chro);
 
-    void copier(chromosome *source);  // copie le chromosome 'source'
-    bool identique(chromosome *chro); // test si 2 chromosome sont identique
+    /**
+     * @brief Echange entre deux gênes passés en paramètre
+     * @param gene1 - entier correspondant à l'index du gêne à échanger
+     * @param gene2 - entier correspondant à l'index de l'autre gêne à échanger
+     */
+    void echange_2_genes(int gene1, int gene2);
 
-    // OPERATEURS DE MUTATION
-    void echange_2_genes(int gene1, // interchange 2 g�nes du chromosome
-                         int gene2);
-    void echange_2_genes_consecutifs(); // interchange 2 g�nes cons�cutifs du chromosome
-    void echange_2_genes_quelconques(); // interchange al�atoirement 2 g�nes du chromosome
-    void deplacement_1_gene();          // d�place un g�ne dans le chromosome
-    void inversion_sequence_genes();    // inverse une s�quence de g�nes du chromosome
+    /**
+     * @brief Echange entre deux gênes consécutifs choisis aléatoirement
+     */
+    void echange_2_genes_consecutifs();
+
+    /**
+     * @brief Echange entre deux gênes quelconques choisis alétoirement
+     */
+    void echange_2_genes_quelconques();
+
+    /**
+     * @brief Déplace un gêne dans le chromosome
+     */
+    void deplacement_1_gene();
+
+    /**
+     * @brief Inverse une séquence de gênes dans le chromosome
+     */
+    void inversion_sequence_genes();
 };
 
 #endif

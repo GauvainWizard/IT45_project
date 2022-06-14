@@ -1,4 +1,5 @@
 #include "csvreader.h"
+
 vector<vector<string>> readCSV(string path)
 {
     vector<vector<string>> table;

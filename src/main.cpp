@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <iostream>
-#include <iomanip> // pour setprecision
+#include <iomanip>
 #include <chrono>
 #include "ae.h"
 #include "chromosome.h"
@@ -14,7 +14,7 @@ int main(int argc, char **argv)
 // argc : nombre de parametres
 // argv : tableau contenant les parametres
 // Soit l'executable 'algo_evo' ne prend pas d'arguments soit il prend 6 arguments :
-//    1. nombre de g�n�ration (entier > 0)
+//    1. nombre de generation (entier > 0)
 //    2. taille de la population (entier > 0)
 //    3. taux de croisement (0 <= reel <= 1)
 //    4. taux de mutation (0 <= reel <= 1)
@@ -24,7 +24,6 @@ int main(int argc, char **argv)
 	// initialise le g�n�rateur de nombre al�atoire
 	Random::randomize();
 
-	// size_t nb_generation = 150000;
 	double temps_max = 20;
 	size_t taille_population = 25;
 	float taux_croisement = 0.75;
@@ -34,7 +33,6 @@ int main(int argc, char **argv)
 
 	if (argc == 7)
 	{
-		// nb_generation = atoi(argv[1]);
 		temps_max = atoi(argv[1]);
 		taille_population = atoi(argv[2]);
 		taux_croisement = atof(argv[3]);

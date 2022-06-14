@@ -1,17 +1,19 @@
 #include "ae.h"
-#include <iomanip>		   // pour setprecision
-Intervenants intervenants; // liste des intervenants
-vector<Mission> missions;  // liste des missions
-double *distances;		   // matrice des distances entre les missions
-double alphaC;			   // paramètre de la fonction des fonctions d'objectif (100 / nombre total de missions)
-double betaC;			   // paramètre de la fonction des fonctions d'objectif (100 / nombre total d'heures qu'un intervenant peut travailler par semaine)
-double gammaC;			   // paramètre de la fonction des fonctions d'objectif (100 / nombre total d'heures supplémentaires tolérées)
-double zetaC;			   // paramètre de la fonction des fonctions d'objectif (100 / moyenne des heures du quota du travail des employés)
-double kappaC;			   // paramètre de la fonction des fonctions d'objectif (100 / moyenne de toutes les distances)
+#include <iomanip>
+
+/**
+ * @brief Variables globales du fichier "global.h"
+ */
+Intervenants intervenants;
+vector<Mission> missions;
+double *distances;
+double alphaC;
+double betaC;
+double gammaC;
+double zetaC;
+double kappaC;
 
 using namespace std;
-
-// initialisation des param�tres de l'AG et g�n�ration de la population initiale
 
 Ae::Ae(double tp_max, size_t tp, double tcroisement, double tmutation, size_t tc, string nom_dossier)
 {
@@ -27,13 +29,11 @@ Ae::Ae(double tp_max, size_t tp, double tcroisement, double tmutation, size_t tc
 	pop = new population(taille_pop, taille_chromosome);
 }
 
-// destructeur de l'objet Ae
 Ae::~Ae()
 {
 	delete pop;
 }
 
-// proc�dure principale de la recherche
 chromosome *Ae::optimiser()
 {
 	size_t amelioration = 0;
@@ -43,29 +43,33 @@ chromosome *Ae::optimiser()
 	chromosome *pere2;
 	double best_fitness;
 
-	// �valuation des individus de la population initiale
+	// Evaluation des individus de la population initiale
 	for (size_t ind = 0; ind < taille_pop; ++ind)
 		pop->individus[ind]->evaluer();
 
-	// on ordonne les indivudus selon leur fitness
+	// On ordonne les indivudus selon leur fitness
 	pop->ordonner();
 
 	best_fitness = pop->individus[pop->ordre[0]]->critere1;
-	//  on affiche les statistiques de la population initiale
+	// On affiche les statistiques de la population initiale
 	cout << "Quelques statistiques sur la population initiale" << endl;
 	pop->statistiques();
 	bool pass = false;
+
+	// Lancement du chrono après initialisation de la population intiale
 	auto start = std::chrono::system_clock::now();
-	// tant que le nombre de g�n�rations limite n'est pas atteint
-	// for (size_t g = 0; g < nbgenerations; ++g)
+
+	// Nombre de générations réalisées
 	size_t g = 0;
+
+	// Boucle pendant la durée du temps d'exécution maximal
 	while (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - start).count() < temps_max)
 	{
-		// s�lection de deux individus de la population courante
+		// Selection de deux individus de la population courante
 		pere1 = pop->selection_roulette();
 		pere2 = pop->selection_roulette();
 		pass = false;
-		// On effectue un croisementavec une probabilit� "taux_croisement"
+		// On effectue un croisementavec une probabilite "taux_croisement"
 		if (Random::aleatoire(1000) / 1000.0 < taux_croisement)
 		{
 			// Random croisement1X ou croisement2X
@@ -84,23 +88,23 @@ chromosome *Ae::optimiser()
 			fils2->copier(pere2);
 		}
 
-		// On effectue la mutation d'un enfant avec une probabilit� "taux_mutation"
+		// On effectue la mutation d'un enfant avec une probabilite "taux_mutation"
 		if (Random::aleatoire(1000) / 1000.0 < taux_mutation)
 			fils1->echange_2_genes_consecutifs();
 
-		// On effectue la mutation de l'autre enfant avec une probabilit� "taux_mutation"
+		// On effectue la mutation de l'autre enfant avec une probabilite "taux_mutation"
 		if (Random::aleatoire(1000) / 1000.0 < taux_mutation)
 			fils2->echange_2_genes_consecutifs();
 
-		// On effectue la mutation d'un enfant avec une probabilit� "taux_mutation"
+		// On effectue la mutation d'un enfant avec une probabilite "taux_mutation"
 		if (Random::aleatoire(1000) / 1000.0 < taux_mutation)
 			fils1->echange_2_genes_quelconques();
 
-		// On effectue la mutation de l'autre enfant avec une probabilit� "taux_mutation"
+		// On effectue la mutation de l'autre enfant avec une probabilite "taux_mutation"
 		if (Random::aleatoire(1000) / 1000.0 < taux_mutation)
 			fils2->echange_2_genes_quelconques();
 
-		// On effectue la mutation d'un enfant avec une probabilit� "taux_mutation"
+		// On effectue la mutation d'un enfant avec une probabilite "taux_mutation"
 		if (Random::aleatoire(1000) / 1000.0 < taux_mutation)
 			fils1->deplacement_1_gene();
 
@@ -113,14 +117,14 @@ chromosome *Ae::optimiser()
 		if (Random::aleatoire(1000) / 1000.0 < taux_mutation)
 			fils2->inversion_sequence_genes();
 
-		// �valuation des deux nouveaux individus g�n�r�s
+		// Evaluation des deux nouveaux individus generes
 		if (fils1->evaluer())
 			pop->remplacement_roulette(fils1);
 		if (fils2->evaluer())
 			pop->remplacement_roulette(fils2);
-		// On r�ordonne la population selon la fitness
+		// On reordonne la population selon la fitness
 		pop->reordonner();
-		// Si l'un des nouveaux indivudus-solutions est le meilleur jamais rencont�
+		// Si l'un des nouveaux indivudus-solutions est le meilleur jamais renconte
 		if (pop->individus[pop->ordre[0]]->critere1 < best_fitness)
 		{
 			taux_mutation = taux_mutation;
@@ -143,27 +147,19 @@ chromosome *Ae::optimiser()
 		}
 		++g;
 	}
-	// reordonner par rapport au critere2 et critere3
+	// Reordonner par rapport aux critere2 et critere3
 	pop->reordonner_critere2();
 	pop->reordonner_critere3();
-	//  on affiche les statistiques de la population finale
+	//  On affiche les statistiques de la population finale
 	cout << "Quelques statistiques sur la population finale" << endl;
 	pop->statistiques();
-	//  on affiche la consanginit� de la population finale
+	//  On affiche la consanginite de la population finale
 	pop->similitude();
 
-	// retourner le meilleur individu rencontr� pendant la recherche
+	// Retourner le meilleur individu rencontre pendant la recherche
 	return pop->individus[pop->ordre[0]];
 }
 
-// op�rateur de croisement � un point : croisement 1X
-// 1) l'op�rateur 1X choisit de mani�re al�atoire un point de croisement
-// 2) l'op�rateur 1X recopie le d�but du parent 1 au d�but de l'enfant 1
-//                     et le d�but du parent 2 au d�but de l'enfant 2.
-// 3) l'op�rateur 1X compl�te l'enfant 1 avec les g�nes manquant en les pla�ant dans l'ordre du parent 2
-//                         et l'enfant 2 avec les g�nes manquant en les pla�ant dans l'ordre du parent 1.
-//    Le 1ier fils est le produit de la partie haute du premier parent et
-//    de la partie basse du deuxi�me parent et inversement pour le 2�me fils
 void Ae::croisement1X(chromosome &parent1, chromosome &parent2,
 					  chromosome &enfant1, chromosome &enfant2)
 {
@@ -178,16 +174,16 @@ void Ae::croisement1X(chromosome &parent1, chromosome &parent2,
 		odre_parent2[parent2.gene[i]] = i;
 	}
 
-	// 1) l'op�rateur 1X choisit de mani�re al�atoire le point de croisement
+	// 1) l'operateur 1X choisit de maniere aleatoire le point de croisement
 	int point = Random::aleatoire(nb_genes);
 
-	// 2) l'op�rateur 1X recopie le d�but du parent 1 au d�but de l'enfant 1
-	//                     et le d�but du parent 2 au d�but de l'enfant 2.
+	// 2) l'operateur 1X recopie le debut du parent 1 au debut de l'enfant 1
+	//    et le debut du parent 2 au debut de l'enfant 2.
 	enfant1.copier(&parent1);
 	enfant2.copier(&parent2);
 
-	// 3) l'op�rateur 1X compl�te l'enfant 1 avec les g�nes manquant en les pla�ant dans l'ordre du parent 2
-	//                         et l'enfant 2 avec les g�nes manquant en les pla�ant dans l'ordre du parent 1.
+	// 3) l'operateur 1X complete l'enfant 1 avec les genes manquant en les placant dans l'ordre du parent 2
+	//    et l'enfant 2 avec les genes manquant en les placant dans l'ordre du parent 1.
 	for (size_t k = point + 1; k < nb_genes; ++k)
 	{
 		for (size_t l = k + 1; l < nb_genes; ++l)
@@ -200,12 +196,6 @@ void Ae::croisement1X(chromosome &parent1, chromosome &parent2,
 	}
 }
 
-// op�rateur de croisement � deux points : croisement 2X
-// 1) l'op�rateur 2X choisit de mani�re al�atoire 2 points de croisement
-// 2) l'op�rateur 2X recopie le d�but du parent 1 au d�but de l'enfant 1
-//                        et le d�but du parent 2 au d�but de l'enfant 2.
-// 3) l'op�rateur 2X compl�te l'enfant 1 avec les g�nes manquant en les pla�ant dans l'ordre du parent 2
-//                         et l'enfant 2 avec les g�nes manquant en les pla�ant dans l'ordre du parent 1.
 void Ae::croisement2X(chromosome &parent1, chromosome &parent2,
 					  chromosome &enfant_s1, chromosome &enfant_s2)
 {
@@ -219,17 +209,17 @@ void Ae::croisement2X(chromosome &parent1, chromosome &parent2,
 		odre_parent2[parent2.gene[i]] = i;
 	}
 
-	// 1) l'op�rateur 2X choisit de mani�re al�atoire les point de croisement
+	// 1) l'operateur 2X choisit de maniere aleatoire les point de croisement
 	size_t point1 = Random::aleatoire(nb_genes);
 	size_t point2 = Random::aleatoire(nb_genes);
 
-	// 2) l'op�rateur 2X recopie le d�but du parent 1 au d�but de l'enfant 1
-	//                        et le d�but du parent 2 au d�but de l'enfant 2.
+	// 2) l'operateur 2X recopie le debut du parent 1 au debut de l'enfant 1
+	//    et le debut du parent 2 au debut de l'enfant 2.
 	enfant_s1.copier(&parent1);
 	enfant_s2.copier(&parent2);
 
-	// 3) l'op�rateur 2X compl�te l'enfant 1 avec les g�nes manquant en les pla�ant dans l'ordre du parent 2
-	//                         et l'enfant 2 avec les g�nes manquant en les pla�ant dans l'ordre du parent 1.
+	// 3) l'operateur 2X complete l'enfant 1 avec les genes manquant en les placant dans l'ordre du parent 2
+	//    et l'enfant 2 avec les genes manquant en les placant dans l'ordre du parent 1.
 	for (size_t k = point1 + 1; k < point2; ++k)
 	{
 		for (size_t l = k + 1; l < point2; ++l)
@@ -242,30 +232,28 @@ void Ae::croisement2X(chromosome &parent1, chromosome &parent2,
 	}
 }
 
-void Ae::croisement2LOX(chromosome &parent1, chromosome &parent2,
-						chromosome &enfant_s1, chromosome &enfant_s2)
-{
-}
-
 void Ae::construction_correlation(const string nom_dossier)
 {
-	double parseTemps[2] = {24, 35}; // tableau pour convertir en heures
+	// Tableau pour convertir en heures
+	double parseTemps[2] = {24, 35};
 	// alpha
 	alphaC = 100 / missions.size();
 	// beta
 	betaC = 100 / 45;
 	// gamma
 	gammaC = 100 / 10;
+
 	// zeta
 	// On boucle sur la liste des intervenants
 	for (size_t i = 0; i < intervenants.getListe()->size(); ++i)
 	{
-		// On convertir le temps de travail de l'intervenant i en heures
+		// On convertit le temps de travail de l'intervenant i en heures
 		zetaC += parseTemps[intervenants.getListe()->at(i).getTemps()];
 	}
 	zetaC = (100) / (zetaC / intervenants.getListe()->size());
+
 	// kappa
-	// on boucle sur la liste des missions
+	// On boucle sur la liste des missions
 	for (size_t i = 1; i < missions.size() + 1; ++i)
 	{
 		kappaC += distances[0 * (missions.size() + 1) + i] + distances[i * (missions.size() + 1) + 0];
@@ -278,13 +266,13 @@ void Ae::construction_distance(const string nom_dossier)
 	// Concatenation du nom du dossier et du nom du fichier
 	string path = nom_dossier + "/Distances.csv";
 
-	// allocation de la matrice des distances
+	// Allocation de la matrice des distances
 	distances = new double[(taille_chromosome + 1) * (taille_chromosome + 1)];
 
-	// lecture du CSV intervenants
+	// Lecture du CSV intervenants
 	vector<vector<string>> files = readCSV(path);
 
-	// construction de la matrice des distances
+	// Construction de la matrice des distances
 	for (size_t i = 0; i < taille_chromosome + 1; ++i)
 	{
 		for (size_t j = 0; j < taille_chromosome + 1; ++j)
