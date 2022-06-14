@@ -16,6 +16,7 @@ public:
     // ATTRIBUTS
     vector<int> gene; // les g�nes du chromosome/solution
     size_t taille;    // la taille du chromosome = nombre de g�nes
+    double penalite;  // la penalite du chromosome
     double critere1;  // la valeur de la fonction objectif (fitness) de la solution
     double critere2;  // la valeur du critère 2 des meilleures solutions
     double critere3;  // la valeur du critère 3 des meilleures solutions

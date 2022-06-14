@@ -1,5 +1,5 @@
 #include "ae.h"
-
+#include <iomanip>		   // pour setprecision
 Intervenants intervenants; // liste des intervenants
 vector<Mission> missions;  // liste des missions
 double *distances;		   // matrice des distances entre les missions
@@ -36,7 +36,7 @@ Ae::~Ae()
 // proc�dure principale de la recherche
 chromosome *Ae::optimiser()
 {
-	int amelioration = 0;
+	size_t amelioration = 0;
 	chromosome *fils1 = new chromosome(taille_chromosome);
 	chromosome *fils2 = new chromosome(taille_chromosome);
 	chromosome *pere1;
@@ -54,23 +54,31 @@ chromosome *Ae::optimiser()
 	//  on affiche les statistiques de la population initiale
 	cout << "Quelques statistiques sur la population initiale" << endl;
 	pop->statistiques();
-
+	bool pass = false;
 	auto start = std::chrono::system_clock::now();
-
 	// tant que le nombre de g�n�rations limite n'est pas atteint
 	// for (size_t g = 0; g < nbgenerations; ++g)
 	size_t g = 0;
-	while (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - start).count() != temps_max)
+	while (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - start).count() < temps_max)
 	{
 		// s�lection de deux individus de la population courante
 		pere1 = pop->selection_roulette();
 		pere2 = pop->selection_roulette();
+		pass = false;
 		// On effectue un croisementavec une probabilit� "taux_croisement"
 		if (Random::aleatoire(1000) / 1000.0 < taux_croisement)
 		{
+			// Random croisement1X ou croisement2X
 			croisement1X(*pere1, *pere2, *fils1, *fils2);
+			pass = true;
 		}
-		else
+		if (Random::aleatoire(1000) / 1000.0 < taux_croisement)
+		{
+			// Random croisement1X ou croisement2X
+			croisement2X(*pere1, *pere2, *fils1, *fils2);
+			pass = true;
+		}
+		if (!pass)
 		{
 			fils1->copier(pere1);
 			fils2->copier(pere2);
@@ -84,22 +92,54 @@ chromosome *Ae::optimiser()
 		if (Random::aleatoire(1000) / 1000.0 < taux_mutation)
 			fils2->echange_2_genes_consecutifs();
 
+		// On effectue la mutation d'un enfant avec une probabilit� "taux_mutation"
+		if (Random::aleatoire(1000) / 1000.0 < taux_mutation)
+			fils1->echange_2_genes_quelconques();
+
+		// On effectue la mutation de l'autre enfant avec une probabilit� "taux_mutation"
+		if (Random::aleatoire(1000) / 1000.0 < taux_mutation)
+			fils2->echange_2_genes_quelconques();
+
+		// On effectue la mutation d'un enfant avec une probabilit� "taux_mutation"
+		if (Random::aleatoire(1000) / 1000.0 < taux_mutation)
+			fils1->deplacement_1_gene();
+
+		if (Random::aleatoire(1000) / 1000.0 < taux_mutation)
+			fils2->deplacement_1_gene();
+
+		if (Random::aleatoire(1000) / 1000.0 < taux_mutation)
+			fils1->inversion_sequence_genes();
+
+		if (Random::aleatoire(1000) / 1000.0 < taux_mutation)
+			fils2->inversion_sequence_genes();
+
 		// �valuation des deux nouveaux individus g�n�r�s
 		if (fils1->evaluer())
 			pop->remplacement_roulette(fils1);
 		if (fils2->evaluer())
 			pop->remplacement_roulette(fils2);
-
 		// On r�ordonne la population selon la fitness
 		pop->reordonner();
-
 		// Si l'un des nouveaux indivudus-solutions est le meilleur jamais rencont�
 		if (pop->individus[pop->ordre[0]]->critere1 < best_fitness)
 		{
+			taux_mutation = taux_mutation;
+			taux_croisement = taux_croisement;
 			best_fitness = pop->individus[pop->ordre[0]]->critere1;
 			cout << "Amelioration de la meilleure solution a la generation " << g << " : " << best_fitness << endl;
+			cout << "Le temps est de " << std::setprecision(9) << std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - start).count() << " secondes" << endl;
 			amelioration = g;
 		}
+		// else if (g > amelioration + 15000 && pop->individus[pop->ordre[0]]->penalite != 0)
+		// {
+		// 	for (size_t ind = taille_pop - 1; ind > (taille_pop - 0.50 * taille_pop); --ind)
+		// 	{
+		// 		pop->individus[pop->ordre[ind]]->copier(new chromosome(taille_chromosome));
+		// 		pop->individus[pop->ordre[ind]]->evaluer();
+		// 	}
+		// 	pop->reordonner();
+		// 	amelioration = g;
+		// }
 		++g;
 	}
 	// reordonner par rapport au critere2 et critere3
@@ -168,6 +208,37 @@ void Ae::croisement1X(chromosome &parent1, chromosome &parent2,
 void Ae::croisement2X(chromosome &parent1, chromosome &parent2,
 					  chromosome &enfant_s1, chromosome &enfant_s2)
 {
+	size_t nb_genes = parent1.taille;
+	vector<int> odre_parent1(nb_genes);
+	vector<int> odre_parent2(nb_genes);
+
+	for (size_t i = 0; i < nb_genes; ++i)
+	{
+		odre_parent1[parent1.gene[i]] = i;
+		odre_parent2[parent2.gene[i]] = i;
+	}
+
+	// 1) l'op�rateur 2X choisit de mani�re al�atoire les point de croisement
+	size_t point1 = Random::aleatoire(nb_genes);
+	size_t point2 = Random::aleatoire(nb_genes);
+
+	// 2) l'op�rateur 2X recopie le d�but du parent 1 au d�but de l'enfant 1
+	//                        et le d�but du parent 2 au d�but de l'enfant 2.
+	enfant_s1.copier(&parent1);
+	enfant_s2.copier(&parent2);
+
+	// 3) l'op�rateur 2X compl�te l'enfant 1 avec les g�nes manquant en les pla�ant dans l'ordre du parent 2
+	//                         et l'enfant 2 avec les g�nes manquant en les pla�ant dans l'ordre du parent 1.
+	for (size_t k = point1 + 1; k < point2; ++k)
+	{
+		for (size_t l = k + 1; l < point2; ++l)
+		{
+			if (odre_parent2[enfant_s1.gene[k]] > odre_parent2[enfant_s1.gene[l]])
+				enfant_s1.echange_2_genes(k, l);
+			if (odre_parent1[enfant_s2.gene[k]] > odre_parent1[enfant_s2.gene[l]])
+				enfant_s2.echange_2_genes(k, l);
+		}
+	}
 }
 
 void Ae::croisement2LOX(chromosome &parent1, chromosome &parent2,

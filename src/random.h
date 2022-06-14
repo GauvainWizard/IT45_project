@@ -14,7 +14,7 @@ public:
   };
 
   // retourne une variable al�atoire enti�re comprise entre 0 et (borne-1)
-  static int aleatoire(int borne)
+  static long aleatoire(long borne)
   {
     return (rand() % borne);
   };

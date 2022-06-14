@@ -24,17 +24,11 @@ int main(int argc, char **argv)
 	// initialise le g�n�rateur de nombre al�atoire
 	Random::randomize();
 
-	// valeurs par defaut
-<<<<<<< HEAD
-	size_t nb_generation = 1000000;
-	size_t taille_population = 30;
-=======
 	// size_t nb_generation = 150000;
-	double temps_max = 10;
+	double temps_max = 20;
 	size_t taille_population = 25;
->>>>>>> origin/implementation_temps
-	float taux_croisement = 0.8;
-	float taux_mutation = 0.5;
+	float taux_croisement = 0.75;
+	float taux_mutation = 0.1;
 	size_t taille_chromosome = 100;
 	string folderInstance = "instances/100-10";
 

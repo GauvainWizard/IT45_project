@@ -44,7 +44,7 @@ bool chromosome::evaluer()
 	double sWH = 0;												   // sigma WH (écart type des heures non travaillées)
 	double sD = 0;												   // sigma D (écart type des distances)
 	double sumWOH = 0;											   // somme des heures non travaillées et des heures supplémentaires
-	double penalite = 0;										   // somme des pénalités
+	penalite = 0;												   // somme des pénalités
 	double maxD = 0;											   // distance maximum parcourure
 	const size_t nbMissions = missions.size();					   // nombre de missions
 	const size_t nbIntervenants = intervenants.getListe()->size(); // nombre d'intervenants
@@ -98,7 +98,7 @@ bool chromosome::evaluer()
 				heuresTravailleesJour += tempsTrajetSESSADD;
 				// Si on a travaille sur une amplitude supérieure à 12h
 				if ((missionsJour[nbMissionsJour - 1].getHoraires()[1] + tempsTrajetSESSADD) - (missionsJour[0].getHoraires()[0] - tempsTrajetSESSAD1) > 12 * 60)
-					penalite += 5;
+					penalite += 3;
 			}
 			// On boucle sur les missions du jour
 			for (size_t k = 0; k < nbMissionsJour; ++k)
@@ -127,7 +127,7 @@ bool chromosome::evaluer()
 						tempsTravail1214 += (2 * 60);
 					// Si le tempsTravail1214 est supérieur à 1h
 					if (tempsTravail1214 > 60)
-						penalite += 5;
+						penalite += 2;
 				}
 				if (missionsJour[k].getSpecialite() != intervenants.getListe()->at(gene[i]).getSpecialite())
 					++critere2;
@@ -138,10 +138,10 @@ bool chromosome::evaluer()
 			// heuresTravailleesJour = heuresTravaillees[i] - heuresTravailleesJour;
 			heuresSupJour = heuresTravailleesJour - parseTempsJour[intervenants.getListe()->at(i).getTemps()] * 60;
 			if ((heuresTravailleesJour) > parseTempsJour[intervenants.getListe()->at(i).getTemps()] * 60)
-				penalite += 6; // on ajoute une pénalite de 6
+				penalite += 3; // on ajoute une pénalite de 6
 			// // // Si on a dépassé les 2h d'heures supplémentaires dans la journée
 			if ((heuresSupJour) > 2 * 60)
-				penalite += 12; // on ajoute une pénalite de 12
+				penalite += 3; // on ajoute une pénalite de 12
 			heuresTravaillees[i] += heuresTravailleesJour;
 			missionsJour.clear();
 		}
@@ -169,7 +169,7 @@ bool chromosome::evaluer()
 			maxD = distancesTravail[i]; // on met à jour la distance maximum
 		// si les heures supp sont supérieurs à 10h
 		if (heuresSup[i] > 10)
-			penalite += 5; // on ajoute une pénalite de 5
+			penalite += 1; // on ajoute une pénalite de 5
 		moyenneD += distancesTravail[i];
 	}
 	moyenneOH /= nbIntervenants;
@@ -206,9 +206,7 @@ void chromosome::copier(chromosome *source)
 // on �change les 2 g�nes
 void chromosome::echange_2_genes(int gene1, int gene2)
 {
-	int inter = gene[gene1];
-	gene[gene1] = gene[gene2];
-	gene[gene2] = inter;
+	swap(gene[gene1], gene[gene2]);
 }
 
 void chromosome::echange_2_genes_consecutifs()
@@ -223,14 +221,33 @@ void chromosome::echange_2_genes_consecutifs()
 
 void chromosome::echange_2_genes_quelconques()
 {
+	int i = Random::aleatoire(taille);
+	int j = Random::aleatoire(taille);
+
+	// on �change le g�ne s�l�ctionn� al�atoirement avec le g�ne le succ�dant
+	echange_2_genes(i, j);
 }
 
 void chromosome::deplacement_1_gene()
 {
+	// insertion d'un gene dans une position aléatoire et décaler les autres
+	size_t i = Random::aleatoire(taille - 1);
+	size_t j = Random::aleatoire(taille);
+	// décaler les autres genes
+	for (size_t k = taille - 1; k > i; --k)
+		gene[k] = gene[k - 1];
+	gene[i] = gene[j];
 }
 
 void chromosome::inversion_sequence_genes()
 {
+	int i = Random::aleatoire(taille - 1);
+	int j = Random::aleatoire(taille);
+	while (i >= j)
+		j = Random::aleatoire(taille);
+	// inverser toutes les genes entre i et j
+	for (int k = i; k < j; ++k)
+		echange_2_genes(k, j - (k - i));
 }
 
 // affichage des param�tre d'un chromosome

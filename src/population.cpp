@@ -133,10 +133,7 @@ void population::reordonner_critere3()
 	for (size_t i = 0; i < taille - 1; ++i)
 		for (size_t j = i + 1; j < taille; ++j)
 			if (individus[ordre[i]]->critere3 > individus[ordre[j]]->critere3)
-			{
-				cout << "L'individu " << individus[ordre[i]]->critere1 << " " << individus[ordre[i]]->critere2 << " " << individus[ordre[i]]->critere3 << " est plus petit que " << individus[ordre[j]]->critere1 << " " << individus[ordre[j]]->critere2 << " " << individus[ordre[j]]->critere3 << endl;
 				swap(ordre[i], ordre[j]);
-			}
 }
 
 // SELECTION PAR ROULETTE BIAISEE
