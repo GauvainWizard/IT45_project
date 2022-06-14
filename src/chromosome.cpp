@@ -106,7 +106,7 @@ bool chromosome::evaluer()
 				tempsTrajetSESSADD = tempsTrajetSESSADD / (50 * 1000 / 60);
 				heuresTravailleesJour += tempsTrajetSESSADD;
 				// Si on a travaille sur une amplitude supérieure à 12h
-				if ((missionsJour[nbMissionsJour - 1].getHoraires()[1] + tempsTrajetSESSADD) - (missionsJour[0].getHoraires()[0] - tempsTrajetSESSAD1) > 12 * 60)
+				if ((missionsJour[nbMissionsJour - 1].getHoraires()[1] + tempsTrajetSESSADD) - (missionsJour[0].getHoraires()[0] - tempsTrajetSESSAD1) >= 12 * 60)
 					penalite += 3; // on ajoute une pénalité de 3
 			}
 			// On boucle sur les missions du jour
@@ -139,7 +139,7 @@ bool chromosome::evaluer()
 					if (missionsJour[k].getHoraires()[0] < 12 * 60 && missionsJour[k].getHoraires()[1] + tempsTrajet > 14 * 60)
 						tempsTravail1214 += (2 * 60);
 					// Si le tempsTravail1214 est supérieur à 1h
-					if (tempsTravail1214 > 60)
+					if (tempsTravail1214 >= 60)
 						penalite += 2; // on ajoute une pénalité de 2
 				}
 				if (missionsJour[k].getSpecialite() != intervenants.getListe()->at(gene[i]).getSpecialite())
@@ -150,10 +150,10 @@ bool chromosome::evaluer()
 			// Si on a trop travaillé dans la journée par rapport au temps réglementaire
 			// heuresTravailleesJour = heuresTravaillees[i] - heuresTravailleesJour;
 			heuresSupJour = heuresTravailleesJour - parseTempsJour[intervenants.getListe()->at(i).getTemps()] * 60;
-			if ((heuresTravailleesJour) > parseTempsJour[intervenants.getListe()->at(i).getTemps()] * 60)
+			if ((heuresTravailleesJour) >= parseTempsJour[intervenants.getListe()->at(i).getTemps()] * 60)
 				penalite += 5; // on ajoute une pénalite de 5
 			// // // Si on a dépassé les 2h d'heures supplémentaires dans la journée
-			if ((heuresSupJour) > 2 * 60)
+			if ((heuresSupJour) >= 2 * 60)
 				penalite += 5; // on ajoute une pénalite de 5
 			heuresTravaillees[i] += heuresTravailleesJour;
 			missionsJour.clear();
@@ -181,7 +181,7 @@ bool chromosome::evaluer()
 		if (maxD < distancesTravail[i])
 			maxD = distancesTravail[i]; // on met à jour la distance maximum
 		// si les heures supp sont supérieurs à 10h
-		if (heuresSup[i] > 10)
+		if (heuresSup[i] >= 10)
 			penalite += 1; // on ajoute une pénalite de 1
 		moyenneD += distancesTravail[i];
 	}

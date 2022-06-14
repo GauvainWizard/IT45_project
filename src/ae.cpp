@@ -135,7 +135,7 @@ chromosome *Ae::optimiser()
 			cout << "Le temps est de " << std::setprecision(9) << diff.count() << " secondes" << endl;
 			amelioration = g;
 		}
-		else if (g > amelioration + 15000 && pop->individus[pop->ordre[0]]->penalite != 0)
+		if (g > amelioration + 15000 && pop->individus[pop->ordre[0]]->penalite != 0)
 		{
 			for (size_t ind = taille_pop - 1; ind > (taille_pop - 0.75 * taille_pop); --ind)
 			{
