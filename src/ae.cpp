@@ -63,7 +63,7 @@ chromosome *Ae::optimiser()
 	size_t g = 0;
 
 	// Boucle pendant la durée du temps d'exécution maximal
-	while (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - start).count() < temps_max)
+	while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start).count() < temps_max * 1000)
 	{
 		// Selection de deux individus de la population courante
 		pere1 = pop->selection_roulette();
